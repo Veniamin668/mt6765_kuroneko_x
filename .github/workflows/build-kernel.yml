@@ -5,46 +5,47 @@ on:
 
 jobs:
   build:
-    # Используем стандартный раннер, где есть Node.js
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # Устанавливаем Nix в стандартный раннер
+      # Устанавливаем Nix, чтобы использовать стабильный и предсказуемый тулчейн
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
-        - name: Build with Nix
+      - name: Build with Nix
         run: |
-          # Включаем экспериментальные фичи Nix
+          # Включаем экспериментальные фичи Nix для работы с nix-shell
           mkdir -p ~/.config/nix
           echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
 
-          # Используем gcc11 вместо gcc10
+          # Запускаем сборку внутри nix-shell
+          # Используем gcc11, так как gcc10 удален из репозиториев
           nix-shell -p \
             gcc11 \
             gcc-arm-embedded \
             gnumake bc bison flex libssl_1_1 ncurses cpio python3 wget \
             --run "
-              # Твои патчи
+              # Патчи для исправления ошибок сборки
               sed -i 's/BUILD_BUG();/\/* BUILD_BUG(); *\//g' arch/arm64/include/asm/percpu.h
 
-              # Сборка
+              # Настройка окружения
               export ARCH=arm64
               export CROSS_COMPILE=aarch64-none-elf-
               export CROSS_COMPILE_ARM32=arm-none-eabi-
               
+              # Очистка и конфигурация
               make clean && make mrproper
               make akx_extreme_defconfig
               make olddefconfig
               
+              # Сборка с подавлением ошибок (Warnings as errors off)
               make -j$(nproc) KBUILD_CFLAGS='-w -Wno-error' HOSTCFLAGS='-w -Wno-error'
             "
-
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -56,4 +57,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
+          name: "KuroNeko Extreme Kernel Build"
+          body: |
+            ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
+            * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
+            * **Окружение:** NixOS-based environment.
           files: arch/arm64/boot/Image.gz-dtb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
