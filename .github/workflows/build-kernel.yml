@@ -35,13 +35,16 @@ jobs:
           make clean
           make mrproper
           
+          # ИСПРАВЛЕНИЕ: Удаляем ТОЛЬКО «висячий» -Wno-, 
+          # который заканчивается пробелом или концом строки.
+          # Флаги вроде -Wno-trigraphs останутся нетронутыми!
+          find . -name "Makefile*" -exec sed -i 's/-Wno-[[:space:]]*/ /g' {} +
+          
           make akx_extreme_defconfig
           make olddefconfig
           
-          # Используем переменные KCFLAGS и HOSTCFLAGS для игнорирования ошибок
-          # -w: подавляет все предупреждения
-          # -Wno-error: отключает поведение "превращать предупреждения в ошибки"
-          make -j$(nproc) KCFLAGS="-w -Wno-error" HOSTCFLAGS="-w -Wno-error"
+          # Запуск сборки
+          make -j$(nproc)
 
       - name: Prepare Artifact for Release
         run: |
