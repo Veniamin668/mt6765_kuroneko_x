@@ -30,6 +30,13 @@ jobs:
             build-essential git bc bison flex libssl-dev libncurses5-dev \
             gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu \
             python3 wget cpio
+      - name: Check Compiler Version
+        run: |
+          echo "Checking default gcc:"
+          gcc --version
+          echo "Checking cross-compiler (aarch64):"
+          aarch64-linux-gnu-gcc --version
+          
       - name: Build Kernel Core
         run: |
           export ARCH=arm64
