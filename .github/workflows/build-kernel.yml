@@ -30,15 +30,9 @@ jobs:
             build-essential git bc bison flex libssl-dev libncurses5-dev \
             gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu \
             python3 wget cpio
-      - name: Check Compiler Version
-        run: |
-          echo "Checking default gcc:"
-          gcc --version
-          echo "Checking cross-compiler (aarch64):"
-          aarch64-linux-gnu-gcc --version
 
-          - name: Patch Kernel Code
-          run: |
+          - name: Install Compilers and Dependencies
+              run: |
           # 1. Закомментируем BUILD_BUG в percpu.h, так как он вызывает ошибку при сборке
           sed -i 's/BUILD_BUG();/\/* BUILD_BUG(); *\//g' arch/arm64/include/asm/percpu.h
           
