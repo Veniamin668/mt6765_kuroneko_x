@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-22.04
     # Используем Debian 11 внутри контейнера — это "золотой стандарт" для ядер 2021-2023 годов
     container:
-      image: debian:11
+      image: debian:10
     
     steps:
       - name: Checkout Source Code
