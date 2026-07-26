@@ -13,19 +13,16 @@ jobs:
       - name: Install Compilers and Dependencies
         run: |
           sudo apt-get update
-          # Добавляем gcc-10 и g++-10 (это нативные компиляторы для x86_64)
+          # Добавляем необходимые пакеты для кросс-сборки
           sudo apt-get install -y bc build-essential libncurses5-dev libssl-dev xz-utils bison flex ccache \
-            gcc-10 g++-10 \
-            gcc-10-aarch64-linux-gnu gcc-10-arm-linux-gnueabi
+            gcc-aarch64-linux-gnu \
+            gcc-arm-linux-gnueabi \
+            gcc-11 g++-11 # Можно ставить 11-ю версию, если 10-я капризничает
       - name: Build Kernel Core
         run: |
           export ARCH=arm64
-          export CROSS_COMPILE=aarch64-linux-gnu-
-          export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-          
-          export CC=aarch64-linux-gnu-gcc-10
-          export HOSTCC=gcc-10
-          export HOSTCXX=g++-10  
+          export CROSS_COMPILE=aarch64-linux-gnu-11
+          export CROSS_COMPILE_ARM32=arm-linux-gnueabi-11
           make akx_extreme_defconfig
           make olddefconfig
           make -j$(nproc)
