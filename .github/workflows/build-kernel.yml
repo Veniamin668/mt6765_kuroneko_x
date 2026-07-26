@@ -16,15 +16,20 @@ jobs:
 
       - name: Install Compilers and Dependencies
         run: |
+          # Переключаемся на архивные репозитории Debian 10
+          echo "deb http://archive.debian.org/debian/ buster main" > /etc/apt/sources.list
+          echo "deb http://archive.debian.org/debian-security/ buster/updates main" >> /etc/apt/sources.list
+          
+          # Отключаем проверку подписей (архивные ключи часто протухают)
+          echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+          
           apt-get update
-          # Добавляем python3 для работы скриптов MediaTek
-          apt-get install -y bc build-essential libncurses5-dev libssl-dev xz-utils bison flex ccache \
-            gcc-aarch64-linux-gnu \
-            gcc-arm-linux-gnueabi \
-            libelf-dev \
-            pkg-config \
-            git \
-            python3
+          
+          # Теперь ставим всё необходимое
+          apt-get install -y \
+            build-essential git bc bison flex libssl-dev libncurses5-dev \
+            gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu \
+            python3 wget cpio
       - name: Build Kernel Core
         run: |
           export ARCH=arm64
