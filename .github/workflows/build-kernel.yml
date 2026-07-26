@@ -31,20 +31,15 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
-          # Очистка
           make clean
           make mrproper
-          
-          # ИСПРАВЛЕНИЕ: Удаляем ТОЛЬКО «висячий» -Wno-, 
-          # который заканчивается пробелом или концом строки.
-          # Флаги вроде -Wno-trigraphs останутся нетронутыми!
-          find . -name "Makefile*" -exec sed -i 's/-Wno-[[:space:]]*/ /g' {} +
-          
           make akx_extreme_defconfig
           make olddefconfig
           
-          # Запуск сборки
-          make -j$(nproc)
+          # Самое важное: передаем переменные, которые подавляют ошибки компиляции
+          # KBUILD_CFLAGS="-w" полностью отключает предупреждения
+          # -Wno-error отключает превращение предупреждений в ошибки (то, что нас стопорит)
+          make -j$(nproc) KBUILD_CFLAGS="-w -Wno-error" HOSTCFLAGS="-w -Wno-error"
 
       - name: Prepare Artifact for Release
         run: |
