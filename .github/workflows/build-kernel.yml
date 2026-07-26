@@ -1,43 +1,53 @@
 name: Build KuroNeko Extreme Kernel
 
 on:
-  workflow_dispatch: # Кнопка ручного запуска в интерфейсе GitHub
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # Стабильное облачное окружение
+    runs-on: ubuntu-22.04
+    # Используем Debian 11 внутри контейнера — это "золотой стандарт" для ядер 2021-2023 годов
+    container:
+      image: debian:11
+    
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
       - name: Install Compilers and Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y bc build-essential libncurses5-dev libssl-dev xz-utils bison flex ccache \
+          apt-get update
+          # В контейнере apt-get уже есть, sudo там не нужен (ты и так root)
+          apt-get install -y bc build-essential libncurses5-dev libssl-dev xz-utils bison flex ccache \
             gcc-aarch64-linux-gnu \
             gcc-arm-linux-gnueabi \
             libelf-dev \
-            pkg-config
+            pkg-config \
+            git
+
       - name: Build Kernel Core
         run: |
           export ARCH=arm64
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          
+          # Обязательно чистим, чтобы старые конфиги не конфликтовали
+          make clean
           make akx_extreme_defconfig
           make olddefconfig
           make -j$(nproc)
 
       - name: Prepare Artifact for Release
         run: |
-          # Переименовываем бинарник в красивое имя, чтобы везде всё было четко
           mkdir -p release_output
+          # Используем одно имя везде
           cp arch/arm64/boot/Image.gz-dtb release_output/KuroNeko-Extreme.gz-dtb
 
-      - name: Upload to Actions Artifacts (Страховка)
+      - name: Upload to Actions Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: KuroNeko-Extreme-Artifact
-          path: release_output/KuroNeko-Extreme-PELMENI.gz-dtb
+          path: release_output/KuroNeko-Extreme.gz-dtb # Имя совпадает!
 
       - name: Generate Release Tag
         id: tag
@@ -51,7 +61,7 @@ jobs:
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
             * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
-            * **Компилятор:** `GCC 10`.
+            * **Окружение:** Debian 11 Container.
           files: release_output/KuroNeko-Extreme.gz-dtb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
