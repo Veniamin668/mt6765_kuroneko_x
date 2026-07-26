@@ -32,18 +32,18 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
-          # Даем права на выполнение скриптам
-          chmod +x tools/dct/DrvGen.py
-          
+          # Очистка старых файлов
           make clean
           make mrproper
+          
+          # ИСПРАВЛЕНИЕ: Удаляем поломанный флаг -Wno- из файлов сборки
+          find . -name "Makefile*" -exec sed -i 's/-Wno-//g' {} +
           
           make akx_extreme_defconfig
           make olddefconfig
           
-          # Добавляем CFLAGS, чтобы игнорировать ошибки (превращаем Werror в warning)
-          # Это должно помочь с ошибкой '-Wno-'
-          make -j$(nproc) KCFLAGS="-w"
+          # Запуск сборки
+          make -j$(nproc)
 
       - name: Prepare Artifact for Release
         run: |
