@@ -5,22 +5,22 @@ on:
 
 jobs:
   build:
+    # Используем стандартный раннер, где есть Node.js
     runs-on: ubuntu-latest
-    container:
-      image: nixos/nix:latest
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
+      # Устанавливаем Nix в стандартный раннер
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
       - name: Build with Nix
         run: |
-          # Включаем экспериментальные фичи Nix
-          mkdir -p ~/.config/nix
-          echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
-
           # Запускаем сборку внутри nix-shell
-          # Мы сразу тянем нужные компиляторы и утилиты
           nix-shell -p \
             gcc10 \
             gcc-arm-embedded \
