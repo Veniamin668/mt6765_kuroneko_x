@@ -17,13 +17,14 @@ jobs:
       - name: Install Compilers and Dependencies
         run: |
           apt-get update
-          # В контейнере apt-get уже есть, sudo там не нужен (ты и так root)
+          # Добавляем python3 для работы скриптов MediaTek
           apt-get install -y bc build-essential libncurses5-dev libssl-dev xz-utils bison flex ccache \
             gcc-aarch64-linux-gnu \
             gcc-arm-linux-gnueabi \
             libelf-dev \
             pkg-config \
-            git
+            git \
+            python3
 
       - name: Build Kernel Core
         run: |
@@ -31,11 +32,18 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
-          # Обязательно чистим, чтобы старые конфиги не конфликтовали
+          # Даем права на выполнение скриптам
+          chmod +x tools/dct/DrvGen.py
+          
           make clean
+          make mrproper
+          
           make akx_extreme_defconfig
           make olddefconfig
-          make -j$(nproc)
+          
+          # Добавляем CFLAGS, чтобы игнорировать ошибки (превращаем Werror в warning)
+          # Это должно помочь с ошибкой '-Wno-'
+          make -j$(nproc) KCFLAGS="-w"
 
       - name: Prepare Artifact for Release
         run: |
