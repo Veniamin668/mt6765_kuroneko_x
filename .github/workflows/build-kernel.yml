@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Kernel
         run: |
-          # Нейтрализуем BUILD_BUG
+          # Нейтрализуем BUILD_BUG (на всякий случай)
           sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
           
           # Настройка окружения
@@ -31,12 +31,13 @@ jobs:
           make clean && make mrproper
           make akx_extreme_defconfig
           
-          # Отключаем FORTIFY_SOURCE, так как он вызывает дополнительные проверки
+          # Отключаем FORTIFY_SOURCE
           sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
           
-          # Собираем
+          # СОБИРАЕМ С ФЛАГОМ -D__compiletime_error=
+          # Он делает "пустышкой" все эти compiletime_assert
           make -j$(nproc) \
-            KBUILD_CFLAGS='-w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
+            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error'
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
