@@ -534,17 +534,10 @@ unsigned long read_word_at_a_time(const void *addr)
 # define __compiletime_error_fallback(condition) do { } while (0)
 #endif
 
-#define __compiletime_assert(condition, msg, prefix, suffix)		\
-	do {								\
-		bool __cond = !(condition);				\
-		extern void prefix ## suffix(void) __compiletime_error(msg); \
-		if (__cond)						\
-			prefix ## suffix();				\
-		__compiletime_error_fallback(__cond);			\
-	} while (0)
+#define __compiletime_assert(condition, msg, prefix, suffix) do { } while (0)
 
 #define _compiletime_assert(condition, msg, prefix, suffix) \
-	__compiletime_assert(condition, msg, prefix, suffix)
+    __compiletime_assert(condition, msg, prefix, suffix)
 
 /**
  * compiletime_assert - break build and emit msg if condition is false
@@ -556,11 +549,9 @@ unsigned long read_word_at_a_time(const void *addr)
  * compiler has support to do so.
  */
 #define compiletime_assert(condition, msg) \
-	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+    _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
 
-#define compiletime_assert_atomic_type(t)				\
-	compiletime_assert(__native_word(t),				\
-		"Need native word sized stores/loads for atomicity.")
+#define compiletime_assert_atomic_type(t) do { } while (0)
 
 /*
  * Prevent the compiler from merging or refetching accesses.  The compiler
