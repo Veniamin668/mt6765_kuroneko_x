@@ -18,7 +18,7 @@ jobs:
           # Обновляем ключи и базы данных
           pacman -Syu --noconfirm
           # Добавили arm-linux-gnueabihf-gcc для 32-битных компонентов
-          pacman -S --noconfirm base-devel aarch64-linux-gnu-gcc arm-linux-gnueabihf-gcc bc bison flex cpio python openssl wget
+          pacman -S --noconfirm base-devel aarch64-linux-gnu-gcc arm-none-eabi-gcc bc bison flex cpio python openssl wget
 
           - name: Build Kernel
           run: |
