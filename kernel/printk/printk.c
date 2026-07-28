@@ -68,6 +68,7 @@ static u64 overflow_gap;
  * 1: uart printk disable
  * 2: uart printk always enable
  */
+extern int mt_need_uart_console;
 int printk_disable_uart;
 
 module_param_named(disable_uart, printk_disable_uart, int, 0644);
