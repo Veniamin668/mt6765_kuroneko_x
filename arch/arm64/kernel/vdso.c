@@ -38,6 +38,17 @@
 #include <asm/vdso.h>
 #include <asm/vdso_datapage.h>
 
+#ifdef CONFIG_COMPAT
+// Объявляем переменные, которых не хватало
+unsigned long sigret_vpage;
+unsigned long kuser_vpage;
+
+// Если макрос не определен в заголовочных файлах, задаем его сами
+#ifndef AARCH32_VECTORS_BASE
+#define AARCH32_VECTORS_BASE 0xffff0000
+#endif
+#endif
+
 #ifdef USE_SYSCALL
 #if defined(__LP64__)
 static int enable_64 = 1;
