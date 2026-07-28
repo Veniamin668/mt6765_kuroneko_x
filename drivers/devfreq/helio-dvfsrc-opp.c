@@ -11,7 +11,7 @@
  * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
  */
 
-#include <helio-dvfsrc.h>
+#include "helio-dvfsrc.h"
 #include <helio-dvfsrc-opp.h>
 
 static struct opp_profile opp_table[VCORE_DVFS_OPP_NUM];
