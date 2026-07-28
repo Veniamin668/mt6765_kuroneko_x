@@ -10,7 +10,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
-
+ccflags-y += -I$(src)
+ccflags-y += -I$(srctree)/drivers/power/supply/mediatek/battery/
 
 MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
 subdir-ccflags-y += -Werror -I$(srctree)/drivers/misc/mediatek/pmic/include
