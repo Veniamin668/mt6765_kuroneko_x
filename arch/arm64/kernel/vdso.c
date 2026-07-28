@@ -99,7 +99,7 @@ static int __init alloc_vectors_page(void)
 #ifndef CONFIG_VDSO32
 	extern char __aarch32_sigret_code_start[], __aarch32_sigret_code_end[];
 
-	int kuser_sz = __kuser_helper_end - __kuser_helper_start;
+	size_t kuser_sz = __kuser_helper_end - __kuser_helper_start;
 	int sigret_sz = __aarch32_sigret_code_end - __aarch32_sigret_code_start;
 	unsigned long vpage;
 
