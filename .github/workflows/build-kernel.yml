@@ -17,17 +17,19 @@ jobs:
         run: |
           # Обновляем ключи и базы данных
           pacman -Syu --noconfirm
-          # Ставим всё необходимое для сборки
-          pacman -S --noconfirm base-devel aarch64-linux-gnu-gcc bc bison flex cpio python openssl wget
+          # Добавили arm-linux-gnueabihf-gcc для 32-битных компонентов
+          pacman -S --noconfirm base-devel aarch64-linux-gnu-gcc arm-linux-gnueabihf-gcc bc bison flex cpio python openssl wget
 
-      - name: Build Kernel
-        run: |
+          - name: Build Kernel
+          run: |
           # Твои патчи
           sed -i 's/BUILD_BUG();/\/* BUILD_BUG(); *\//g' arch/arm64/include/asm/percpu.h
 
           # Настройка окружения
           export ARCH=arm64
           export CROSS_COMPILE=aarch64-linux-gnu-
+          # Добавляем этот экспорт, чтобы сборщик увидел 32-битный компилятор
+          export CROSS_COMPILE_ARM32=arm-linux-gnueabihf-
           
           # Очистка и конфигурация
           make clean && make mrproper
