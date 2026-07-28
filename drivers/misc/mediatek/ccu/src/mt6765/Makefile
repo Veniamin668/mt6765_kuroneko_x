@@ -12,6 +12,9 @@
 #
 
 #ion
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/ccu/src/mt6765
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/ccu/src/mt6765/ccu_ext_interface
+ccflags-y += -I$(src)
 ccflags-y += -I$(srctree)/drivers/staging/android/ion \
              -I$(srctree)/drivers/staging/android/ion/mtk \
              -I$(srctree)/drivers/iommu/
