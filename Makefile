@@ -394,10 +394,12 @@ LINUXINCLUDE	+= $(filter-out $(LINUXINCLUDE),$(USERINCLUDE))
 
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs  \
-		   -fno-strict-aliasing -fno-common -fshort-wchar \
-		   -Werror-implicit-function-declaration \
-		   -Wno-format-security \
-		   -std=gnu89 -Wno-uninitialized
+           -fno-strict-aliasing -fno-common -fshort-wchar \
+           -Werror-implicit-function-declaration \
+           -Wno-format-security \
+           -std=gnu89 -Wno-uninitialized \
+           -Wno-error=incompatible-pointer-types -Wno-error=int-conversion \
+           -Wno-error=declaration-after-statement
 KBUILD_CPPFLAGS := -D__KERNEL__
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
