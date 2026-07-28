@@ -15,6 +15,8 @@
 
 MTK_PLATFORM := $(CONFIG_MTK_PLATFORM)
 
+ccflags-y += -I$(src)
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/cmdq/v3/
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/smi/ \
              -I$(srctree)/drivers/misc/mediatek/mmp/ \
              -I$(srctree)/drivers/misc/mediatek/mdp/ \
