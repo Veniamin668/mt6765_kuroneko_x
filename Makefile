@@ -400,6 +400,10 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs  \
            -std=gnu89 -Wno-uninitialized \
            -Wno-error=incompatible-pointer-types -Wno-error=int-conversion \
            -Wno-error=declaration-after-statement
+KBUILD_CFLAGS += -I$(srctree)/drivers/misc/mediatek/include
+KBUILD_CFLAGS += -I$(srctree)/drivers/misc/mediatek/cmdq/v3
+KBUILD_CFLAGS += -I$(srctree)/drivers/misc/mediatek/ccu/src/mt6765
+KBUILD_CFLAGS += -I$(srctree)/drivers/misc/mediatek/base/power/spm/inc
 KBUILD_CPPFLAGS := -D__KERNEL__
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
