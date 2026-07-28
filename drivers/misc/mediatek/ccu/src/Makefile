@@ -11,6 +11,9 @@
 # GNU General Public License for more details.
 #
 
+ccflags-y += -I$(src)/mt6765
+ccflags-y += -I$(src)/mt6765/ccu_ext_interface
+
 #obj-y += $(subst ",,$(CONFIG_MTK_PLATFORM))/
 #obj-$(CONFIG_ARCH_MT6799) += 1.0/
 
