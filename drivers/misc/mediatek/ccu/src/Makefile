@@ -11,6 +11,7 @@
 # GNU General Public License for more details.
 #
 
+ccflags-y += -I$(src)
 ccflags-y += -I$(src)/mt6765
 ccflags-y += -I$(src)/mt6765/ccu_ext_interface
 
