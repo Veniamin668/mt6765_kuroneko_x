@@ -11,6 +11,8 @@
 # GNU General Public License for more details.
 #
 
+ccflags-y += -I$(src)
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/thermal/mt6765/inc/mach
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/dramc/$(MTK_PLATFORM)/
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/power/$(MTK_PLATFORM)/
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/base/power/include/
