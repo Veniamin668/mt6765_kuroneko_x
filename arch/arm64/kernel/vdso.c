@@ -102,7 +102,7 @@ static int __init alloc_vectors_page(void)
 	int sigret_sz = __aarch32_sigret_code_end - __aarch32_sigret_code_start;
 	unsigned long vpage;
 
-	sigret_vpage = get_zeroed_page(GFP_ATOMIC);
+	vpage = get_zeroed_page(GFP_ATOMIC);
 
 	if (!vpage)
 		return -ENOMEM;
@@ -112,7 +112,7 @@ static int __init alloc_vectors_page(void)
 	kuser_vpage = get_zeroed_page(GFP_ATOMIC);
 	if (!kuser_vpage) {
 #ifndef CONFIG_VDSO32
-		free_page(sigret_vpage);
+		free_page(vpage);
 #endif
 		return -ENOMEM;
 	}
@@ -137,14 +137,14 @@ static int __init alloc_vectors_page(void)
 }
 arch_initcall(alloc_vectors_page);
 
-#ifndef CONFIG_VDSO32
+#if !defined(CONFIG_VDSO32) && defined(CONFIG_COMPAT)
 int aarch32_setup_vectors_page(struct linux_binprm *bprm, int uses_interp)
 {
-	struct mm_struct *mm = current->mm;
-	unsigned long addr = AARCH32_VECTORS_BASE;
-	static const struct vm_special_mapping spec = {
-		.name	= "[vectors]",
-		.pages	= vectors_page,
+    struct mm_struct *mm = current->mm;
+    unsigned long addr = AARCH32_VECTORS_BASE;
+    static const struct vm_special_mapping spec = {
+        .name    = "[vectors]",
+        .pages   = vectors_page,
 
 	};
 	void *ret;
