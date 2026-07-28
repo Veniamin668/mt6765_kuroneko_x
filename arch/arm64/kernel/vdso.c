@@ -118,7 +118,7 @@ static int __init alloc_vectors_page(void)
 	}
 #endif
 
-#ifndef CONFIG_VDSO32
+#if !defined(CONFIG_VDSO32) && defined(CONFIG_COMPAT)
 	/* sigreturn code */
 	memcpy((void *)sigret_vpage, __aarch32_sigret_code_start, sigret_sz);
 	flush_icache_range(sigret_vpage, sigret_vpage + PAGE_SIZE);
