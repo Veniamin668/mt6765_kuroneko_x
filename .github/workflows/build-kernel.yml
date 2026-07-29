@@ -12,25 +12,29 @@ jobs:
     steps:
       - name: Prepare Legacy Environment
         run: |
-          # Чистим старый конфиг и прописываем только живое зеркало
+          # 1. Репозитории
           echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
-          
-          # Отключаем проверки, которые ломают старый Debian
           echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
-          echo "Acquire::AllowInsecureRepositories \"true\";" >> /etc/apt/apt.conf.d/99-ignore-valid-until
-          echo "Acquire::AllowDowngradeToInsecureRepositories \"true\";" >> /etc/apt/apt.conf.d/99-ignore-valid-until
-          
-          # Обновляемся с флагами игнорирования ошибок
           apt-get update -o Acquire::AllowInsecureRepositories=true
           
-          # Ставим git и нужные инструменты
+          # 2. Базовый софт (без кросс-компиляторов, их ставим руками)
           apt-get install -y --no-install-recommends \
-            build-essential bc bison flex cpio python libssl-dev \
-            wget zip git gcc-aarch64-linux-gnu gcc-arm-none-eabi
-
-          # Клонируем исходники
+            build-essential bc bison flex cpio python libssl-dev wget zip git
+          
+          # 3. Клонирование
           git clone --depth=1 https://github.com/${{ github.repository }} mt6765_kuroneko_x
           cd mt6765_kuroneko_x
+          
+          # 4. Качаем тулчейн Linaro (он гарантированно работает на Debian 8)
+          wget -q https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/aarch64-linux-gnu/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
+          wget -q https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-eabi/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.tar.xz
+          
+          tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
+          tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.tar.xz
+          
+          # Экспортируем пути (они будут доступны в этом шаге, но для след. шагов сделаем иначе)
+          echo "TOOLCHAIN_AARCH64=$(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-" >> $GITHUB_ENV
+          echo "TOOLCHAIN_ARM=$(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi/bin/arm-eabi-" >> $GITHUB_ENV
 
       - name: Build Kernel
         run: |
@@ -38,9 +42,10 @@ jobs:
           # Нейтрализуем BUILD_BUG
           sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
           
+          # Настройка окружения с нашими скачанными тулчейнами
           export ARCH=arm64
-          export CROSS_COMPILE=aarch64-linux-gnu-
-          export CROSS_COMPILE_ARM32=arm-none-eabi-
+          export CROSS_COMPILE=${{ env.TOOLCHAIN_AARCH64 }}
+          export CROSS_COMPILE_ARM32=${{ env.TOOLCHAIN_ARM }}
           
           make clean && make mrproper
           make akx_extreme_defconfig
