@@ -29,27 +29,19 @@ jobs:
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
           make clean && make mrproper
+          
+          # Сначала генерим дефолтный конфиг
           make akx_extreme_defconfig
-
-          # ВКЛЮЧАЕМ IOMMU
-          echo "CONFIG_IOMMU_SUPPORT=y" >> .config
-          echo "CONFIG_ARM_SMMU=y" >> .config
-          echo "CONFIG_ARM_SMMU_V3=y" >> .config
           
-          # ФИКСЫ ДЛЯ ДРАЙВЕРОВ
-          echo "CONFIG_MODULES=y" >> .config
-          echo "CONFIG_MODULE_SIG=n" >> .config
-          echo "CONFIG_MODULE_UNLOAD=y" >> .config
+          # Теперь правильно включаем опции через make (он сам разрешит зависимости)
+          scripts/config --file .config -e IOMMU_SUPPORT -e ARM_SMMU -e ARM_SMMU_V3
+          scripts/config --file .config -e MODULES -e MODULE_UNLOAD -d MODULE_SIG
+          scripts/config --file .config -d STACKPROTECTOR -d STACKPROTECTOR_STRONG -d FORTIFY_SOURCE
           
-          # ОТКЛЮЧАЕМ ВСЮ ЗАЩИТУ, КОТОРАЯ БЕСИТ ДРАЙВЕРЫ
-          echo "CONFIG_STACKPROTECTOR=n" >> .config
-          echo "CONFIG_STACKPROTECTOR_STRONG=n" >> .config
-          echo "CONFIG_FORTIFY_SOURCE=n" >> .config
+          # И финальный make olddefconfig, который сам примет решения по новым зависимостям (типа того selftest)
+          make olddefconfig
           
-          # Дополнительный сетап флагов для жесткого игнорирования ошибок
-          sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
-          
-          # СОБИРАЕМ (добавили -fno-gnu89-inline и убедились что нет stack-protector)
+          # СОБИРАЕМ
           make -j$(nproc) \
             KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -fno-gnu89-inline -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error -fno-stack-protector'
