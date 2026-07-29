@@ -29,6 +29,10 @@ jobs:
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-none-eabi-
           
+          grep "CONFIG_TRANSPARENT_HUGEPAGE" .config
+          grep "CONFIG_PCI" .config
+          grep "CONFIG_MEMCG" .config
+          
           make clean && make mrproper
           make akx_extreme_defconfig
           
