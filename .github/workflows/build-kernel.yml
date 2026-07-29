@@ -5,8 +5,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    # Блок container полностью удален
+    runs-on: ubuntu-22.04
+
 
     steps:
       - name: Checkout Source Code
@@ -18,14 +18,8 @@ jobs:
           sudo apt-get update 
           sudo apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python3 libssl-dev \
-            wget zip git libelf-dev ca-certificates
+            wget zip git libelf-dev ca-certificates gcc-aarch64-linux-gnu gcc-arm-none-eabi
           
-          # На всякий случай чистим конфиг git
-          git config --global http.postBuffer 524288000
-          
-          # Клонируем тулчейны
-          git clone --depth=1 https://github.com/mvaisakh/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.git toolchain-aarch64
-          git clone --depth=1 https://github.com/mvaisakh/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.git toolchain-arm
           
           # Экспортируем пути
           echo "TOOLCHAIN_AARCH64=$(pwd)/toolchain-aarch64/bin/aarch64-linux-gnu-" >> $GITHUB_ENV
