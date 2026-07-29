@@ -11,6 +11,9 @@
 # GNU General Public License for more details.
 #
 
+ccflags-y += -fno-pic
+CFLAGS_REMOVE_fm_module.o := -fPIC
+CFLAGS_REMOVE_fm_main.o := -fPIC
 # Force build fail on modpost warning
 KBUILD_MODPOST_FAIL_ON_WARNINGS := y
 ###############################################################################
