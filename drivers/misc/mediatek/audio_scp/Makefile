@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # SPDX-License-Identifier: GPL-2.0
 
 # MTK Platform Support

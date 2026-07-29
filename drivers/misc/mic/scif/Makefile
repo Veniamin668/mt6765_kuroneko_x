@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile - SCIF driver.
 # Copyright(c) 2014, Intel Corporation.

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the Linux device tree
 
 obj-$(CONFIG_EISA)	        += eisa-bus.o

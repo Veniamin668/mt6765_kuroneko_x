@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile to build the network driver for ServerEngine's BladeEngine.
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # core
 ssb-y					+= main.o scan.o
 ssb-$(CONFIG_SSB_EMBEDDED)		+= embedded.o

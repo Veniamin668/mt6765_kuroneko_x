@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Silicon Integrated Systems (SiS) network device drivers.
 #

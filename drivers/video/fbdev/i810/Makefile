@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Intel 810/815 framebuffer driver
 #

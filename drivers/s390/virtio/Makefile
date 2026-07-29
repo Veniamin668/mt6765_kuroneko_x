@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for kvm guest drivers on s390
 #
 # Copyright IBM Corp. 2008

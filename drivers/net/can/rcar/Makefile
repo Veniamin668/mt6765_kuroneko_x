@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 #  Makefile for the Renesas R-Car CAN & CAN FD controller drivers
 #

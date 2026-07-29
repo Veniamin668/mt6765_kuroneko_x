@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 SCP_VERSION := v01
 SCP_VERSION_PATH := ../$(SCP_VERSION)
 

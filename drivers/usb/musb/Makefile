@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # for USB OTG silicon based on Mentor Graphics INVENTRA designs
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the S/390 common i/o drivers
 #

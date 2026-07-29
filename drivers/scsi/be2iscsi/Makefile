@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile to build the iSCSI driver for Emulex OneConnect.
 #

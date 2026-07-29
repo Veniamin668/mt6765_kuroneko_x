@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 # Copyright (C) 2016 MediaTek Inc.
 #

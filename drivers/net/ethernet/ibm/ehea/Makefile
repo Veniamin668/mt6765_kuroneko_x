@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the eHEA ethernet device driver for IBM eServer System p
 #

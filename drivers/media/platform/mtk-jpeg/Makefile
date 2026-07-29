@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 subdir-ccflags-y += -Werror
 
 mtk_jpeg-objs := mtk_jpeg_core.o mtk_jpeg_hw.o mtk_jpeg_parse.o

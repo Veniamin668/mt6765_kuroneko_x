@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 ccflags-y += -I$(srctree)/drivers/spi/mediatek/$(MTK_PLATFORM)
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat

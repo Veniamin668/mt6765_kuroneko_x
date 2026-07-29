@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Linux Kernel SOC fsl specific device drivers
 #

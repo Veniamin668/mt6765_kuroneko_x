@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 KBUILD_CFLAGS += -Oz
 
 obj-y += dfd.o

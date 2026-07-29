@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 obj-$(CONFIG_FMC) += fmc.o
 

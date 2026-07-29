@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 obj-$(CONFIG_NVME_TARGET)		+= nvmet.o
 obj-$(CONFIG_NVME_TARGET_LOOP)		+= nvme-loop.o

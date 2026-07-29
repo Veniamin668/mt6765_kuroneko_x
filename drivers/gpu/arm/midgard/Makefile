@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # (C) COPYRIGHT 2010-2016 ARM Limited. All rights reserved.
 #

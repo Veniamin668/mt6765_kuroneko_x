@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for individual comedi drivers
 #
 ccflags-$(CONFIG_COMEDI_DEBUG)		:= -DDEBUG

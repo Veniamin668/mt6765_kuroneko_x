@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 obj-y := fdvt_dummy.o
 
 #$(info FDVT: makefile start)

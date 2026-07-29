@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the hysdn ISDN device driver
 
 # Each configuration option enables a list of files.

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ifeq (y, $(filter y, $(CONFIG_MACH_MT6765) $(CONFIG_MACH_MT6761)))
 PWM_PLAT_NAME = $(subst ",,mt6765)
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/pwm/mt6765/include

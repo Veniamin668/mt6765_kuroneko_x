@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the hisax ISDN device driver
 
 # The target object and module list name.

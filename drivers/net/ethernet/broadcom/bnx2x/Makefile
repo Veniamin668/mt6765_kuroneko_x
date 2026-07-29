@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Broadcom 10-Gigabit ethernet driver
 #

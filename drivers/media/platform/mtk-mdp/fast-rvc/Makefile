@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 obj-y += mtk_mdp_frvc.o
 
 ccflags-y += \

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the V4L2 core
 #

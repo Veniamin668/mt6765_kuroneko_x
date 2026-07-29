@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Samsung pin control drivers
 
 obj-$(CONFIG_PINCTRL_SAMSUNG)	+= pinctrl-samsung.o

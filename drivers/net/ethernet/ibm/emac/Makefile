@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the PowerPC 4xx on-chip ethernet driver
 #

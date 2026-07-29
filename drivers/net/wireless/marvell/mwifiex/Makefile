@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Copyright (C) 2011-2014, Marvell International Ltd.
 #

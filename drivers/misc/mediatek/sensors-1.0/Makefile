@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 KBUILD_CFLAGS += -Oz
 
 ifeq ($(CONFIG_MTK_SENSOR_SUPPORT),y)

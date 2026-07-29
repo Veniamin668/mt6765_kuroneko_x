@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 subdir-ccflags-$(CONFIG_MTK_PMIC_CHIP_MT6357)+= -I$(srctree)/drivers/misc/mediatek/pmic/include/mt6357
 
 obj-$(CONFIG_MTK_EXTBUCK) += extbuck/

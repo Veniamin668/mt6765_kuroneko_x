@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 subdir-ccflags-y += -Iinclude/drm  \
 		-I$(FULL_AMD_PATH)/powerplay/inc/  \

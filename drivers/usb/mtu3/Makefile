@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 ccflags-$(CONFIG_USB_MTU3_DEBUG)	+= -DDEBUG
 

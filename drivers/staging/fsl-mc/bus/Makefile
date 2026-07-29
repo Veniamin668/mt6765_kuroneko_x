@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Freescale Management Complex (MC) bus drivers
 #

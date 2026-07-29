@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for triggers not associated with iio-devices
 #

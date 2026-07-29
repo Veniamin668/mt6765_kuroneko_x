@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Linux IEEE 1394 implementation
 #

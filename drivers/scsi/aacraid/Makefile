@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Adaptec aacraid
 
 obj-$(CONFIG_SCSI_AACRAID) := aacraid.o

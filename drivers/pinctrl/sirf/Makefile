@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # CSR SiRFsoc pinmux support
 
 obj-y	+= pinctrl-sirf.o

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Mediatek SoCs built-in ethernet macs
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # linux/drivers/mtd/devices/Makefile
 #

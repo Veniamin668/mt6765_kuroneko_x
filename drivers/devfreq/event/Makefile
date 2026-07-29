@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Exynos DEVFREQ Event Drivers
 
 obj-$(CONFIG_DEVFREQ_EVENT_EXYNOS_NOCP) += exynos-nocp.o

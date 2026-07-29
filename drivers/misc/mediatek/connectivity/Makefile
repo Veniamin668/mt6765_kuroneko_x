@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 KBUILD_CFLAGS += -Wno-unused-variable
 #
 # Copyright (C) 2015 MediaTek Inc.

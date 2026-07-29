@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 KBUILD_CFLAGS += -fdata-sections -ffunction-sections -finline-functions -ftree-vectorize -funroll-loops -ffast-math -fforce-addr -Wno-unused-label -Wno-ignored-qualifiers
 
 OPTIM = -O3 

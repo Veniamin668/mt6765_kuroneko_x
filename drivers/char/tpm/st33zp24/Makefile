@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for ST33ZP24 TPM 1.2 driver
 #

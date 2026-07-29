@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ifneq ($(CONFIG_MTK_LCM), y)
 	obj-y += mtkfb.o
 

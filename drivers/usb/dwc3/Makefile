@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # define_trace.h needs to know how to find our header
 CFLAGS_trace.o				:= -I$(src)
 

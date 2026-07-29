@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Marvell 88SE64xx/88SE84xx SAS/SATA driver.
 #

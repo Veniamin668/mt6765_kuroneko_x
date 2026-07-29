@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # S/390 network devices
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # DVM
 obj-$(CONFIG_IWLDVM)	+= iwldvm.o
 iwldvm-objs		+= main.o rs.o mac80211.o ucode.o tx.o

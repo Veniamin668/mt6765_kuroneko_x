@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Linux driver folder
 ccflags-y += -I$(srctree)/drivers/input/touchscreen/mediatek/hxchipset/
 ccflags-y += -I$(srctree)/drivers/input/touchscreen/mediatek/

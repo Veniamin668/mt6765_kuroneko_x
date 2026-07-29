@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 obj-$(CONFIG_MTK_VIBRATOR) := vibrator_drv.o
 obj-$(CONFIG_THUNDERQUAKE_ENGINE_GPL) += thunderquake_engine.o
 ifeq (y, $(filter y, $(CONFIG_MACH_MT6765) $(CONFIG_MACH_MT6761)))

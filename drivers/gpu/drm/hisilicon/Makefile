@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for hisilicon drm drivers.
 # Please keep this list sorted alphabetically

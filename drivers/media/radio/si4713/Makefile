@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for radios with Silicon Labs Si4713 FM Radio Transmitters
 #

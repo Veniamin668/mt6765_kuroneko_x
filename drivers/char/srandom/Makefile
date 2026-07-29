@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 default: all
 
 obj-$(CONFIG_SRANDOM) += srandom.o

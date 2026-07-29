@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 mtk-mdp-y += mtk_mdp_core.o
 mtk-mdp-y += mtk_mdp_comp.o
 mtk-mdp-y += mtk_mdp_m2m.o

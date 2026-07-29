@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ################################################################################
 #
 # FUJITSU Extended Socket Network Device driver

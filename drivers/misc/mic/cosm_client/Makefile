@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile - Intel MIC COSM Client Driver
 # Copyright(c) 2015, Intel Corporation.

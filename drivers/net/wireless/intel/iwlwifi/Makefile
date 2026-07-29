@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # common
 obj-$(CONFIG_IWLWIFI)	+= iwlwifi.o
 iwlwifi-objs		+= iwl-io.o

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ifneq ($(CONFIG_MTK_COMBO),)
 
 ifeq ($(CONFIG_MTK_COMBO_CHIP),)

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for radios with Silicon Labs Si470x FM Radio Receivers
 #

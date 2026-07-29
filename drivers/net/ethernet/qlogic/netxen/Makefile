@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Copyright (C) 2003 - 2009 NetXen, Inc.
 # Copyright (C) 2009 - QLogic Corporation.
 # All rights reserved.

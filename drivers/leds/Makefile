@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 # LED Core
 obj-$(CONFIG_NEW_LEDS)			+= led-core.o

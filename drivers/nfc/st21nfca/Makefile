@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for ST21NFCA HCI based NFC driver
 #

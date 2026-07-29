@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for industrial I/O Inclinometer sensor drivers
 #

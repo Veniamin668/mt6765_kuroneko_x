@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the ACP, which is a sub-component
 # of AMDSOC/AMDGPU drm driver.

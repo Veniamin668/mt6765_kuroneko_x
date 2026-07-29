@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 imxdrm-objs := imx-drm-core.o
 

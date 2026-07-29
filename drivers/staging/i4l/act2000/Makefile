@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the act2000 ISDN device driver
 
 # Each configuration option enables a list of files.

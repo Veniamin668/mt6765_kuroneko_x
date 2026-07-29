@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Parallel port IDE device drivers.
 #

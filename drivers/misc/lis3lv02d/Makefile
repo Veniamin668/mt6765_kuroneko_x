@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # STMicroelectonics LIS3LV02D and similar accelerometers
 #

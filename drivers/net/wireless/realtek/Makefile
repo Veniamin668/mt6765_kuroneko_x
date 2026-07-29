@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Linux Wireless network device drivers for Realtek units
 #

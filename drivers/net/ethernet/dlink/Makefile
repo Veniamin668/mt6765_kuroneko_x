@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the D-Link network device drivers.
 #

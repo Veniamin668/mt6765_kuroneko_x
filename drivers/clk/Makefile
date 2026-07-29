@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 KBUILD_CFLAGS += -Wno-unused-variable -Wno-unused-function
 # common clock types
 obj-$(CONFIG_HAVE_CLK)		+= clk-devres.o

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #inlcude SPI Interface Start
 ccflags-y += -I$(srctree)/drivers/spi/mediatek/mt6799/
 ifeq ($(CONFIG_TRUSTONIC_TEE_SUPPORT),y)

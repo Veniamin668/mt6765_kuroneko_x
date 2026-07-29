@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for physical layer USB drivers
 #

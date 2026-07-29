@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # VIA/Wondermedia pinctrl support
 
 obj-$(CONFIG_PINCTRL_WMT)	+= pinctrl-wmt.o

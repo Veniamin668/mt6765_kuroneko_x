@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 #	KMS driver for the GMA500
 #

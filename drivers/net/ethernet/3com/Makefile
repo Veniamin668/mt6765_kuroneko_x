@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the 3Com Ethernet device drivers
 #

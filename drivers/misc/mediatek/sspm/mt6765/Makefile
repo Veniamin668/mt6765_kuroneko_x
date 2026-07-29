@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 obj-y += sspm_platform-y
 
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/sspm

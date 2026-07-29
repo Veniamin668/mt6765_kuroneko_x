@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Cypress C67X00 USB Controller
 #

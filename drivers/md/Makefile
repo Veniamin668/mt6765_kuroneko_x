@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the kernel software RAID and LVM drivers.
 #

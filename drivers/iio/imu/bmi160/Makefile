@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Bosch BMI160 IMU
 #

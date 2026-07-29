@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Lan Media 21140 based WAN cards
 # Specifically the 1000,1200,5200,5245

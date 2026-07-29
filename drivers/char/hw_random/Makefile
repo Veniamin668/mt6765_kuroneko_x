@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for HW Random Number Generator (RNG) device drivers.
 #

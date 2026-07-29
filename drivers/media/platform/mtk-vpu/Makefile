@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 subdir-ccflags-y += -Werror
 
 mtk-vpu-y += mtk_vpu.o

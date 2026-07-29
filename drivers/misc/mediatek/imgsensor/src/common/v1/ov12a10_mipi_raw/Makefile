@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 #add start by hongfei.zhang@mediatek.com
 obj-y += ov12a10mipiraw_Sensor.o

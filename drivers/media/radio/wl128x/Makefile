@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for TI's shared transport driver based wl128x
 # FM radio.

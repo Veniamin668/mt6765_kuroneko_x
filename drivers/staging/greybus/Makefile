@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Greybus core
 greybus-y :=	core.o		\
 		debugfs.o	\

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for Versatile-specific clocks
 obj-$(CONFIG_ICST)		+= clk-icst.o clk-versatile.o
 obj-$(CONFIG_INTEGRATOR_IMPD1)	+= clk-impd1.o

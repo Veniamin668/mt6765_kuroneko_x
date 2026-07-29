@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Adaptec aic94xx SAS/SATA driver.
 #

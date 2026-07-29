@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 KBUILD_CFLAGS += -Os
 
 obj-$(CONFIG_PWM)		+= core.o

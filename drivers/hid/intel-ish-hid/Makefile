@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile - Intel ISH HID drivers
 # Copyright (c) 2014-2016, Intel Corporation.

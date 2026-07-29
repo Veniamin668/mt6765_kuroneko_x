@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # drivers/barcelona/gps/Makefile
 #
 # Makefile for the Barcelona GPS driver.

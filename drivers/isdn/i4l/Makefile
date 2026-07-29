@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the kernel ISDN subsystem and device drivers.
 
 # Each configuration option enables a list of files.

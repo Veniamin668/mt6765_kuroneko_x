@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Core
 obj-y					+= pinctrl-sunxi.o
 

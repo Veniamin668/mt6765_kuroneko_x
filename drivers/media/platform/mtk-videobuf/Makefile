@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 subdir-ccflags-y += -Werror
 
 mtk-videobuf-y += mtk-dma-contig.o

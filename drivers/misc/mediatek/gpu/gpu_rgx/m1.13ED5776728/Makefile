@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 OPTIM = -Os
 
 $(info [GPU_DEBUG] MTK_PLATFORM = $(MTK_PLATFORM))

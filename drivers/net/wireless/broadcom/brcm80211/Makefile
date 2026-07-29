@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile fragment for Broadcom 802.11n Networking Device Driver
 #

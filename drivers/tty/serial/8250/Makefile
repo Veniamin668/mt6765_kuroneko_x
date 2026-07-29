@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the 8250 serial device drivers.
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ifeq (y, $(filter y, $(CONFIG_MACH_MT6761)))
 MTK_PLATFORM:= $(subst ",,mt6765)
 else

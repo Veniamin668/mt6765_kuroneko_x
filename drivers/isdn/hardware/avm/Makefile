@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the AVM ISDN device drivers
 
 # Each configuration option enables a list of files.

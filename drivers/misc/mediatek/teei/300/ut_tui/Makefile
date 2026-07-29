@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Copyright (c) 2015-2017 MICROTRUST Incorporated
 # All Rights Reserved.
 #

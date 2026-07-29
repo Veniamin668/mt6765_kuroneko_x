@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # This file contains the font map for the default (hardware) font
 #

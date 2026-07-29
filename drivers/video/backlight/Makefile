@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Backlight & LCD drivers
 
 obj-$(CONFIG_LCD_AMS369FG06)		+= ams369fg06.o

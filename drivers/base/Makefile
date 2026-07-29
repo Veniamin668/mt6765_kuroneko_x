@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the Linux device tree
 
 ifdef CONFIG_MTPROF

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Intel XScale IXP device drivers.
 #

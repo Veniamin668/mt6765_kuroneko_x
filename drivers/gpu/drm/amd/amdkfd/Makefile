@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Heterogenous System Architecture support for AMD GPU devices
 #

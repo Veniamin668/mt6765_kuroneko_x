@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ################################################################################
 #
 # Intel Ethernet Controller XL710 Family Linux Driver

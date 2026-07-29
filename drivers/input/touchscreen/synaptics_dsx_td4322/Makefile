@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Linux driver folder
 ccflags-y += -I$(srctree)/drivers/input/touchscreen/synaptics_dsx/
 ccflags-y += -I$(srctree)/drivers/input/touchscreen/mediatek/

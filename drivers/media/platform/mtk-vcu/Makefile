@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 subdir-ccflags-y += -Werror
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/smi
 

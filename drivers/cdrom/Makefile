@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the kernel cdrom device drivers.
 #
 # 30 Jan 1998, Michael Elizabeth Chastain, <mailto:mec@shout.net>

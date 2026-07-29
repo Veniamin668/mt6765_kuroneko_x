@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 obj-$(CONFIG_CRYPTO_DEV_QCE) += qcrypto.o
 qcrypto-objs := core.o \
 		common.o \

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # USB peripheral controller drivers
 #

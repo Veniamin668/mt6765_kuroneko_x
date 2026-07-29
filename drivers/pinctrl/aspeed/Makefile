@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Aspeed pinctrl support
 
 ccflags-y += -Woverride-init

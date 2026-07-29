@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Samsung S3FWRN5 NFC driver
 #

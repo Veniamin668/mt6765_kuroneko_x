@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for common V4L/DVB tuners
 #

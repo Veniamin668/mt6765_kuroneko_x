@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile - Intel MIC Coprocessor State Management (COSM) Driver
 # Copyright(c) 2015, Intel Corporation.

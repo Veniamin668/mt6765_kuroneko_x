@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Qlogic 10GbE PCI Express ethernet driver
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ifneq ($(strip $(CONFIG_MTK_TINYSYS_SSPM_SUPPORT)$(CONFIG_MTK_TINYSYS_SSPM_PLT_SUPPORT)),)
 obj-y += sspm.o
 sspm-y := sspm_helper.o sspm_sysfs.o sspm_reservedmem.o sspm_plt.o

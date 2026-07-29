@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Core
 obj-$(CONFIG_PINCTRL_STM32) += pinctrl-stm32.o
 

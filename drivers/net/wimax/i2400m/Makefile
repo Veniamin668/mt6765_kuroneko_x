@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 
 obj-$(CONFIG_WIMAX_I2400M) += i2400m.o
 obj-$(CONFIG_WIMAX_I2400M_USB) += i2400m-usb.o

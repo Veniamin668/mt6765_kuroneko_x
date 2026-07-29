@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for most of the non-PCI devices in PA-RISC machines
 #

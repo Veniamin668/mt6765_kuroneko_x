@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile - Intel MIC Linux driver.
 # Copyright(c) 2016, Intel Corporation.

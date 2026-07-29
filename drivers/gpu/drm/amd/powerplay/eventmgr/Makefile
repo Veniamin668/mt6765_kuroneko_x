@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the 'event manager' sub-component of powerplay.
 # It provides the event management services for the driver.

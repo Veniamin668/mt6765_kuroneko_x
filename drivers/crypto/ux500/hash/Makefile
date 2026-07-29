@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Copyright (C) ST-Ericsson SA 2010
 # Author: Shujuan Chen (shujuan.chen@stericsson.com)

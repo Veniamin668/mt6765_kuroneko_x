@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Generic framework for controlling remote processors
 #

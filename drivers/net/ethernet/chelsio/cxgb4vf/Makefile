@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Chelsio T4 SR-IOV Virtual Function Driver
 #

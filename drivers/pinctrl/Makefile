@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # generic pinmux support
 
 subdir-ccflags-$(CONFIG_DEBUG_PINCTRL)	+= -DDEBUG

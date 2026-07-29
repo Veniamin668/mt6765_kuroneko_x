@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Makefile for the Eicon DIVA ISDN drivers.
 
 # Each configuration option enables a list of files.

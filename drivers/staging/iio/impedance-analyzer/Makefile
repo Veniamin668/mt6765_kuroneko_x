@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for Impedance Converter, Network Analyzer drivers
 #

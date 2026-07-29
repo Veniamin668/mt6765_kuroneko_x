@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 obj-$(CONFIG_MT2712_MAC) := mt2712_mac.o
 
 mt2712_mac-objs := mt2712_dev.o \

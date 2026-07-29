@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Kernel Makefile for the libsas helpers
 #

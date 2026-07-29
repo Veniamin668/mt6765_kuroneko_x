@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ifeq ($(CONFIG_MTK_SENSOR_SUPPORT),y)
 obj-y += hwmsen/
 obj-y += sensor_dts/

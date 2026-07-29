@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the IIO common modules.
 # Common modules contains modules, which can be shared among multiple

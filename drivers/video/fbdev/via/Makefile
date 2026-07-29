@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the VIA framebuffer driver (for Linux Kernel 2.6)
 #

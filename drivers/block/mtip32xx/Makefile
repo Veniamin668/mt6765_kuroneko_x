@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for  Block device driver for Micron PCIe SSD
 #

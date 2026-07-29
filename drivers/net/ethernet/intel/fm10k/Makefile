@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ################################################################################
 #
 # Intel(R) Ethernet Switch Host Interface Driver

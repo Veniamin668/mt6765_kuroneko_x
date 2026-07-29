@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # link order is important here
 #

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ccflags-y += -I$(src)			# needed for trace events
 subdir-ccflags-y += -I$(srctree)/mm/
 MTK_PLATFORM:= $(subst ",,$(CONFIG_MTK_PLATFORM))

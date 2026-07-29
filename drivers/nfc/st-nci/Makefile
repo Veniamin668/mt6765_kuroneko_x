@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for ST_NCI NCI based NFC driver
 #

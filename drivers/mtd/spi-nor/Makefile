@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 subdir-ccflags-y += -Werror
 
 obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o

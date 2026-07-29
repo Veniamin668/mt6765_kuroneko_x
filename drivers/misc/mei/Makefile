@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile - Intel Management Engine Interface (Intel MEI) Linux driver
 # Copyright (c) 2010-2014, Intel Corporation.

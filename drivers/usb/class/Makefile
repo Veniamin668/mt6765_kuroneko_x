@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for USB Class drivers
 # (one step up from the misc category)

@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the OMAP1 framebuffer device driver
 #

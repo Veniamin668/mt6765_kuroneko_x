@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 ################################################################################
 #
 # Linux driver for VMware's vmxnet3 ethernet NIC.

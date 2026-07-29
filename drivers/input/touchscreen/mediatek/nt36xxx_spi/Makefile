@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 #
 # Makefile for the Novatek NT36xxx touchscreen driver.
 #

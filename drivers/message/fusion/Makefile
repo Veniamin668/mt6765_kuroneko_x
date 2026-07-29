@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # Fusion MPT drivers; recognized debug defines...
 
 # enable verbose logging

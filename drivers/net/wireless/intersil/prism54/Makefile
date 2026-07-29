@@ -1,3 +1,4 @@
+ccflags-y += -I$(src)
 # $Id: Makefile.k26,v 1.7 2004/01/30 16:24:00 ajfa Exp $
 
 prism54-objs := islpci_eth.o islpci_mgt.o \
