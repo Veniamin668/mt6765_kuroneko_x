@@ -30,18 +30,23 @@ jobs:
           
           make clean && make mrproper
           
-          # Генерим конфиг
+          # Генерим базовый конфиг
           make akx_extreme_defconfig
           
-          # Настройка конфига
+          # Настройка конфига (включаем IOMMU и нужные модули)
           scripts/config --file .config -e IOMMU_SUPPORT -e ARM_SMMU -e ARM_SMMU_V3
           scripts/config --file .config -e MODULES -e MODULE_UNLOAD -d MODULE_SIG
+          
+          # Отключаем защиту, которая конфликтует с драйверами
           scripts/config --file .config -d STACKPROTECTOR -d STACKPROTECTOR_STRONG -d FORTIFY_SOURCE
           
-          # Авто-разрешение зависимостей
+          # Авто-разрешение зависимостей (чтобы не было 'aborted')
           make olddefconfig
           
-          # СОБИРАЕМ (убрали конфликтный флаг)
+          # ФИКС ДЛЯ GPU: запрещаем инлайнинг, чтобы убрать ошибку 'symbol already defined'
+          find drivers/misc/mediatek/gpu/gpu_rgx -name Makefile -exec sed -i 's|subdir-ccflags-y +=|subdir-ccflags-y += -fno-inline-functions|g' {} \;
+          
+          # СОБИРАЕМ
           make -j$(nproc) \
             KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error -fno-stack-protector'
