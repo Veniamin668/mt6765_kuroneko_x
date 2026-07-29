@@ -25,6 +25,7 @@ jobs:
           echo "Searching for the missing symbols..."
           # Ищем где объявлены или используются эти проблемные куски
           grep -rnw '.' -e 'swayloop' -e 'lsetloop' -e 'kalMetRemoveProcfs' -e 'SMI_BUS_SEL_MASTER'
+      
       - name: Purge stack-protector from Makefiles
         run: |
           find . -type f \( -name "Makefile" -o -name "Kbuild" \) -exec sed -i 's/-fstack-protector[a-zA-Z0-9-]*//g' {} +
