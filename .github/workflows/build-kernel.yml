@@ -7,19 +7,18 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
-
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
       - name: Setup Build Environment
         run: |
-          # Все команды с sudo!
-          sudo apt-get update 
+          # Обновляем список и ставим классические тулчейны из реп Ubuntu
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python3 libssl-dev \
-            wget zip git libelf-dev ca-certificates gcc-aarch64-linux-gnu gcc-arm-none-eabi
-          
+            wget zip git libelf-dev ca-certificates \
+            gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
       - name: Build Kernel
         run: |
@@ -28,10 +27,10 @@ jobs:
           
           # Настройка окружения
           export ARCH=arm64
-          export  aarch64-linux-gnu
-          export armv7-gnu-no-eabi 
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
-          make clean
+          make clean && make mrproper
           make akx_extreme_defconfig
 
           # Отключаем FORTIFY_SOURCE
@@ -44,7 +43,10 @@ jobs:
 
       - name: Package with AnyKernel3
         run: |
+          # Копируем ядро
           cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
+          
+          # Запаковываем
           cd AnyKernel3
           zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
@@ -58,11 +60,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
-          name: "KuroNeko Extreme Kernel Build (Native Ubuntu)"
+          name: "KuroNeko Extreme Kernel Build (Ubuntu 22.04 + System GCC)"
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
             * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
-            * **Окружение:** Native GitHub Runner (Ubuntu) + Linaro 7.5.
+            * **Окружение:** Ubuntu 22.04 + System Toolchain (gcc-aarch64/arm-gnueabi).
             * **Пакет:** Flashable via AnyKernel3.
           files: KuroNeko-Extreme-*.zip
         env:
