@@ -4212,7 +4212,7 @@ static int32_t wlanProbe(void *pvData, void *pvDriverData)
 		       eFailReason);
 		switch (eFailReason) {
 		case FAIL_MET_INIT_PROCFS:
-			kalMetRemoveProcfs();
+//			kalMetRemoveProcfs();
 		case PROC_INIT_FAIL:
 			wlanNetUnregister(prWdev);
 		case NET_REGISTER_FAIL:
