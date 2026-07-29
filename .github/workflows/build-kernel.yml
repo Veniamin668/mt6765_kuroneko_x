@@ -7,17 +7,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: archlinux:latest
+      image: debian:8
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
+      - name: Prepare Legacy Environment
         run: |
-          pacman -Syu --noconfirm
-          # Добавил sudo, inetutils (для hostname) и zip (для упаковки)
-          pacman -S --noconfirm base-devel aarch64-linux-gnu-gcc arm-none-eabi-gcc bc bison flex cpio python openssl wget sudo inetutils zip
+          # Перенаправляем репозитории на архив
+          sed -i 's/httpredir.debian.org/archive.debian.org/g' /etc/apt/sources.list
+          sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+          sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/apt/sources.list
+          
+          # Отключаем проверку срока действия пакетов (они просрочены)
+          echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
+          
+          apt-get update
+          # Ставим необходимый минимум для сборки ядра
+          apt-get install -y --no-install-recommends \
+            build-essential bc bison flex cpio python libssl-dev \
+            wget zip git gcc-aarch64-linux-gnu gcc-arm-none-eabi
 
       - name: Build Kernel
         run: |
@@ -32,24 +42,19 @@ jobs:
           make clean && make mrproper
           make akx_extreme_defconfig
 
-          grep "CONFIG_TRANSPARENT_HUGEPAGE" .config
-          grep "CONFIG_PCI" .config
-          grep "CONFIG_MEMCG" .config
-          
-          # Отключаем FORTIFY_SOURCE
+          # Отключаем FORTIFY_SOURCE (часто ломает старые ядра)
           sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
           
           # СОБИРАЕМ
+          # Если будет падать на системном GCC, здесь же можно добавить wget для скачивания старого Linaro
           make -j$(nproc) \
             KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error'
 
       - name: Package with AnyKernel3
         run: |
-          # Копируем ядро в AnyKernel3
+          # Копируем ядро
           cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
-          # Если есть dtbo, раскомментируй строку ниже:
-          # cp arch/arm64/boot/dtbo.img AnyKernel3/
           
           # Запаковываем
           cd AnyKernel3
@@ -65,12 +70,12 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
-          name: "KuroNeko Extreme Kernel Build"
+          name: "KuroNeko Extreme Kernel Build (Debian 8)"
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
             * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
-            * **Окружение:** Arch Linux Container.
-            * **Пакет:** Flashable via AnyKernel3 (TWRP/OrangeFox).
+            * **Окружение:** Debian 8 (Archive) Container.
+            * **Пакет:** Flashable via AnyKernel3.
           files: KuroNeko-Extreme-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
