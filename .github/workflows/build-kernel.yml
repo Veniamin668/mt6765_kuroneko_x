@@ -1,13 +1,10 @@
-name: build kernel
-
-on:
-  workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: debian:8
+      image: debian:9
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
     steps:
       - name: Checkout Source Code
@@ -15,10 +12,9 @@ jobs:
 
       - name: Prepare Legacy Environment
         run: |
-          # Перенаправляем репозитории на архив
-          sed -i 's/httpredir.debian.org/archive.debian.org/g' /etc/apt/sources.list
-          sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
-          sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/apt/sources.list
+          # Указываем правильные адреса архива для Stretch (Debian 9)
+          echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list
+          echo "deb http://archive.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list
           
           # Отключаем проверку срока действия пакетов (они просрочены)
           echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
@@ -28,6 +24,9 @@ jobs:
           apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python libssl-dev \
             wget zip git gcc-aarch64-linux-gnu gcc-arm-none-eabi
+          
+          # Убеждаемся, что DrvGen.py исполняемый
+          chmod +x ./tools/dct/DrvGen.py
 
       - name: Build Kernel
         run: |
@@ -41,22 +40,18 @@ jobs:
           
           make clean && make mrproper
           make akx_extreme_defconfig
-
-          # Отключаем FORTIFY_SOURCE (часто ломает старые ядра)
+          
+          # Отключаем FORTIFY_SOURCE
           sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
           
           # СОБИРАЕМ
-          # Если будет падать на системном GCC, здесь же можно добавить wget для скачивания старого Linaro
           make -j$(nproc) \
             KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error'
 
       - name: Package with AnyKernel3
         run: |
-          # Копируем ядро
           cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
-          
-          # Запаковываем
           cd AnyKernel3
           zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
@@ -70,11 +65,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
-          name: "KuroNeko Extreme Kernel Build (Debian 8)"
+          name: "KuroNeko Extreme Kernel Build (Debian 9)"
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
             * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
-            * **Окружение:** Debian 8 (Archive) Container.
+            * **Окружение:** Debian 9 (Stretch Archive) Container.
             * **Пакет:** Flashable via AnyKernel3.
           files: KuroNeko-Extreme-*.zip
         env:
