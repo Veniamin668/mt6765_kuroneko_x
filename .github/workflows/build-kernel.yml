@@ -61,7 +61,7 @@ jobs:
           zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: KuroNeko-Extreme-Kernel
           path: KuroNeko-Extreme-*.zip
