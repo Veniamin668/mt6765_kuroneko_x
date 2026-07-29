@@ -54,11 +54,7 @@ jobs:
           
           # 2. Теперь чиним переходы: добавляем 'b' (backward), чтобы ассемблер понял, что это метка
           sed -i 's/b.ge 1/b.ge 1b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
-          sed -i 's/b.ge 2/b.ge 2b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
-          
-          # На случай, если есть просто b (без .ge), тоже подстрахуемся
-          sed -i 's/b 1/b 1b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
-          sed -i 's/b 2/b 2b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
+          sed -i 's/b.ge 2/b.ge 2b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/
 
           export KBUILD_CFLAGS="$KBUILD_CFLAGS -fno-stack-protector"
           
