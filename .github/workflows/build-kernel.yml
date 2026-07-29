@@ -28,8 +28,8 @@ jobs:
           
           # Настройка окружения
           export ARCH=arm64
-          export  gcc-arm-none-eabi-
-          export gcc-aarch64-linux-gnu-
+          export  gcc-arm-none-eabi
+          export gcc-aarch64-linux-gnu
           
           make clean
           make akx_extreme_defconfig
