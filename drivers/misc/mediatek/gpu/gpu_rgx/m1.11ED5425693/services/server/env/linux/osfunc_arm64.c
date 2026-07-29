@@ -111,7 +111,7 @@ static void per_cpu_cache_flush(void *arg)
 		/* For performance, do these in assembly; foreach dcache level/set,
 		   foreach dcache set/way, construct the "DC CISW" instruction
 		   argument and issue instruction */
-		asm volatile (
+/*		asm volatile (
 			"mov x6, %[val0]\n\t"
 			"mov x9, %[rc1]\n\t"
 			"clz w9, w6\n\t"
@@ -130,7 +130,7 @@ static void per_cpu_cache_flush(void *arg)
 			"b.ge lsetloop\n\t"
 			: [rc1] "+r" (Nway), [rc3] "+r" (Nsets), [rc5] "+r" (Var)
 			: [val0] "r" (Assoc), [val2] "r" (Level), [val4] "r" (Lsize)
-			: "x6", "x9", "cc");
+			: "x6", "x9", "cc");*/
 	}
 
 e0:
