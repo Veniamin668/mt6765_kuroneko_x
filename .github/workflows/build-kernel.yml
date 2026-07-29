@@ -22,10 +22,8 @@ jobs:
 
       - name: Build Kernel
         run: |
-          # Нейтрализуем BUILD_BUG
           sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
           
-          # Настройка окружения
           export ARCH=arm64
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
@@ -33,14 +31,29 @@ jobs:
           make clean && make mrproper
           make akx_extreme_defconfig
 
-          # Отключаем FORTIFY_SOURCE
+          # ВКЛЮЧАЕМ IOMMU
+          echo "CONFIG_IOMMU_SUPPORT=y" >> .config
+          echo "CONFIG_ARM_SMMU=y" >> .config
+          echo "CONFIG_ARM_SMMU_V3=y" >> .config
+          
+          # ФИКСЫ ДЛЯ ДРАЙВЕРОВ
+          echo "CONFIG_MODULES=y" >> .config
+          echo "CONFIG_MODULE_SIG=n" >> .config
+          echo "CONFIG_MODULE_UNLOAD=y" >> .config
+          
+          # ОТКЛЮЧАЕМ ВСЮ ЗАЩИТУ, КОТОРАЯ БЕСИТ ДРАЙВЕРЫ
+          echo "CONFIG_STACKPROTECTOR=n" >> .config
+          echo "CONFIG_STACKPROTECTOR_STRONG=n" >> .config
+          echo "CONFIG_FORTIFY_SOURCE=n" >> .config
+          
+          # Дополнительный сетап флагов для жесткого игнорирования ошибок
           sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
           
-          # СОБИРАЕМ
+          # СОБИРАЕМ (добавили -fno-gnu89-inline и убедились что нет stack-protector)
           make -j$(nproc) \
-            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
-            HOSTCFLAGS='-w -Wno-error'
-
+            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -fno-gnu89-inline -std=gnu89' \
+            HOSTCFLAGS='-w -Wno-error -fno-stack-protector'
+            
       - name: Package with AnyKernel3
         run: |
           # Копируем ядро
