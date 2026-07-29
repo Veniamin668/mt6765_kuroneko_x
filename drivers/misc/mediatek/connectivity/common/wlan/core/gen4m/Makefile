@@ -228,8 +228,8 @@ endif
 ifeq ($(CONFIG_MTK_WIFI_ONLY),$(filter $(CONFIG_MTK_WIFI_ONLY),m y))
 obj-$(CONFIG_MTK_WIFI_ONLY) += $(MODULE_NAME).o
 else
-obj-$(CONFIG_MTK_COMBO_WIFI) += $(MODULE_NAME).o
-#obj-y += $(MODULE_NAME).o
+#obj-$(CONFIG_MTK_COMBO_WIFI) += $(MODULE_NAME).o
+obj-y += $(MODULE_NAME).o
 endif
 
 ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
