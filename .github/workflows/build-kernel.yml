@@ -6,36 +6,48 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Build inside Container
+      - name: Install Dependencies
         run: |
-          docker run --rm -v "${PWD}:/build" -w /build ubuntu:18.04 /bin/bash -c "
-            apt-get update && apt-get install -y --no-install-recommends \
-              build-essential bc bison flex cpio python3 libssl-dev \
-              wget zip git gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-arm-none-eabi \
-              libelf-dev dwarves ca-certificates
-            
-            sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, \"BUILD_BUG failed\")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
-            
-            export ARCH=arm64
-            export CROSS_COMPILE=aarch64-linux-gnu-
-            export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
-            
-            make clean && make mrproper
-            make akx_extreme_defconfig
-            sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
-            
-            make -j$(nproc) \
-              KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
-              HOSTCFLAGS='-w -Wno-error'
+          apt-get update && apt-get install -y --no-install-recommends \
+            build-essential bc bison flex cpio python3 libssl-dev \
+            wget zip git gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-arm-none-eabi \
+            libelf-dev dwarves ca-certificates
 
-            cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
-            cd AnyKernel3
-            zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
-          "
+      - name: Build Kernel
+        run: |
+          # Нейтрализуем BUILD_BUG
+          sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
+          
+          # Настройка окружения
+          export ARCH=arm64
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          
+          make clean && make mrproper
+          make akx_extreme_defconfig
+
+          # Отключаем FORTIFY_SOURCE
+          sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
+          
+          # СОБИРАЕМ
+          make -j$(nproc) \
+            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
+            HOSTCFLAGS='-w -Wno-error'
+
+      - name: Package with AnyKernel3
+        run: |
+          cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
+          cd AnyKernel3
+          zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -47,10 +59,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
-          name: "KuroNeko Extreme Kernel Build"
+          name: "KuroNeko Extreme Kernel Build (Ubuntu 20.04)"
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
-            * **Окружение:** Hybrid (Ubuntu 18.04 build inside docker)
+            * **Окружение:** Ubuntu 20.04 Container (Fixed GLIBC).
           files: KuroNeko-Extreme-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
