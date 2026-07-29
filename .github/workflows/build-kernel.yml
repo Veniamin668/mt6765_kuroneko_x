@@ -38,12 +38,15 @@ jobs:
           
           make olddefconfig
           
-          # УБИВАЕМ ИНЛАЙН НА КОРНЮ
-          export KBUILD_CFLAGS="-fno-inline-functions -fno-inline-small-functions -fno-inline-functions-called-once -std=gnu89 -w -Wno-error"
+          # ПЛАН Б: РАДИКАЛЬНЫЙ - Локализируем метки в ассемблере
+          # Теперь они будут .lsetloop, и ассемблер перестанет ныть
+          sed -i 's/lsetloop:/ .lsetloop:/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
+          sed -i 's/swayloop:/ .swayloop:/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
           
+          # СОБИРАЕМ
           make -j$(nproc) \
-            KBUILD_CFLAGS="$KBUILD_CFLAGS" \
-            HOSTCFLAGS='-w -Wno-error -fno-stack-protector'
+            KBUILD_CFLAGS='-w -Wno-error -std=gnu89 -fno-strict-aliasing' \
+            HOSTCFLAGS='-w -Wno-error'
             
       - name: Package with AnyKernel3
         run: |
