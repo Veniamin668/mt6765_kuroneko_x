@@ -20,6 +20,11 @@ jobs:
             wget zip git libelf-dev ca-certificates \
             gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
+      - name: Purge stack-protector from Makefiles
+        run: |
+          find . -type f \( -name "Makefile" -o -name "Kbuild" \) -exec sed -i 's/-fstack-protector[a-zA-Z0-9-]*//g' {} +
+          echo "Зачистка завершена. Флаги удалены из всех Makefile/Kbuild."
+          
       - name: Build Kernel
         run: |
           sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
