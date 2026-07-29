@@ -7,25 +7,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: debian:11
+      image: debian:8
 
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-#      - name: Prepare Legacy Environment
-#        run: |
+      - name: Prepare Legacy Environment
+        run: |
           # Перенаправляем репозитории на архив
-#          sed -i 's/httpredir.debian.org/archive.debian.org/g' /etc/apt/sources.list
-#          sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
-#          sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/apt/sources.list
+          sed -i 's/httpredir.debian.org/archive.debian.org/g' /etc/apt/sources.list
+          sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+          sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/apt/sources.list
           
           # Отключаем проверку срока действия пакетов (они просрочены)
-#          echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
-#          
-      - name: install dependenses
-        run: |
+          echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
+          
           apt-get update
+          # Ставим необходимый минимум для сборки ядра
           apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python libssl-dev \
             wget zip git gcc-aarch64-linux-gnu gcc-arm-none-eabi
