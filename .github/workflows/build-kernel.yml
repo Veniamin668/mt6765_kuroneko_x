@@ -5,18 +5,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:18.04
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
+          apt-get update
+          apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python3 libssl-dev \
-            wget zip git gcc-arm-none-eabi gcc-aarch64-linux-gnu \
-            libelf-dev dwarves
+            wget zip git gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi gcc-arm-none-eabi \
+            libelf-dev dwarves ca-certificates
 
       - name: Build Kernel
         run: |
@@ -26,7 +29,7 @@ jobs:
           # Настройка окружения
           export ARCH=arm64
           export CROSS_COMPILE=aarch64-linux-gnu-
-          export CROSS_COMPILE_ARM32=arm-none-eabi-
+          export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
           
           make clean && make mrproper
           make akx_extreme_defconfig
@@ -34,10 +37,9 @@ jobs:
           # Отключаем FORTIFY_SOURCE
           sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
           
-          # СОБИРАЕМ
-          # Добавили -fgnu89-inline для совместимости с новыми GCC
+          # СОБИРАЕМ (В одном блоке, чтобы переменные не терялись)
           make -j$(nproc) \
-            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89 -fgnu89-inline' \
+            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error'
 
       - name: Package with AnyKernel3
