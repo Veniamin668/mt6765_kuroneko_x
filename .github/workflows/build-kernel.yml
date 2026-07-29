@@ -6,18 +6,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    # Блок container полностью удален
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
       - name: Setup Build Environment
         run: |
-          apt-get update && apt-get install -y --no-install-recommends \
+          # Все команды с sudo!
+          sudo apt-get update 
+          sudo apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python3 libssl-dev \
             wget zip git libelf-dev ca-certificates
           
-          # Клонируем тулчейны прямо с GitHub (без регистрации и СМС)
+          # На всякий случай чистим конфиг git
+          git config --global http.postBuffer 524288000
+          
+          # Клонируем тулчейны
           git clone --depth=1 https://github.com/mvaisakh/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.git toolchain-aarch64
           git clone --depth=1 https://github.com/mvaisakh/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.git toolchain-arm
           
@@ -35,7 +41,7 @@ jobs:
           export CROSS_COMPILE=${{ env.TOOLCHAIN_AARCH64 }}
           export CROSS_COMPILE_ARM32=${{ env.TOOLCHAIN_ARM }}
           
-          make clean && make mrproper
+          make clean
           make akx_extreme_defconfig
 
           # Отключаем FORTIFY_SOURCE
@@ -48,10 +54,7 @@ jobs:
 
       - name: Package with AnyKernel3
         run: |
-          # Копируем ядро
           cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
-          
-          # Запаковываем
           cd AnyKernel3
           zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
@@ -65,11 +68,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
-          name: "KuroNeko Extreme Kernel Build (Ubuntu + Linaro)"
+          name: "KuroNeko Extreme Kernel Build (Native Ubuntu)"
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
             * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
-            * **Окружение:** Ubuntu Latest Container + Linaro 7.5.
+            * **Окружение:** Native GitHub Runner (Ubuntu) + Linaro 7.5.
             * **Пакет:** Flashable via AnyKernel3.
           files: KuroNeko-Extreme-*.zip
         env:
