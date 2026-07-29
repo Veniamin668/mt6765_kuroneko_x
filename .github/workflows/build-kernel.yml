@@ -30,22 +30,19 @@ jobs:
           
           make clean && make mrproper
           
-          # Генерим конфиг
           make akx_extreme_defconfig
           
-          # Настройка конфига
           scripts/config --file .config -e IOMMU_SUPPORT -e ARM_SMMU -e ARM_SMMU_V3
           scripts/config --file .config -e MODULES -e MODULE_UNLOAD -d MODULE_SIG
           scripts/config --file .config -d STACKPROTECTOR -d STACKPROTECTOR_STRONG -d FORTIFY_SOURCE
           
           make olddefconfig
           
-          # ЖЕСТКИЙ ФИКС ДЛЯ GPU: Дописываем флаг прямо в Makefile драйвера, где падает сборка
-          echo "ccflags-y += -fno-inline-functions" >> drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/Makefile
+          # УБИВАЕМ ИНЛАЙН НА КОРНЮ
+          export KBUILD_CFLAGS="-fno-inline-functions -fno-inline-small-functions -fno-inline-functions-called-once -std=gnu89 -w -Wno-error"
           
-          # СОБИРАЕМ
           make -j$(nproc) \
-            KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
+            KBUILD_CFLAGS="$KBUILD_CFLAGS" \
             HOSTCFLAGS='-w -Wno-error -fno-stack-protector'
             
       - name: Package with AnyKernel3
