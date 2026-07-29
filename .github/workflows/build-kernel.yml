@@ -6,43 +6,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: debian:8
-
+    
     steps:
-      - name: Prepare Legacy Environment
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Build Environment
         run: |
-          # 1. Репозитории
-          echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
-          echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
-          apt-get update -o Acquire::AllowInsecureRepositories=true
+          apt-get update && apt-get install -y --no-install-recommends \
+            build-essential bc bison flex cpio python3 libssl-dev \
+            wget zip git libelf-dev ca-certificates
           
-          # 2. Базовый софт (без кросс-компиляторов, их ставим руками)
-          apt-get install -y --no-install-recommends \
-            build-essential bc bison flex cpio python libssl-dev wget zip git
+          # Клонируем тулчейны прямо с GitHub (без регистрации и СМС)
+          git clone --depth=1 https://github.com/mvaisakh/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.git toolchain-aarch64
+          git clone --depth=1 https://github.com/mvaisakh/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.git toolchain-arm
           
-          # 3. Клонирование
-          git clone --depth=1 https://github.com/${{ github.repository }} mt6765_kuroneko_x
-          cd mt6765_kuroneko_x
-          
-          # 4. Качаем тулчейн Linaro (он гарантированно работает на Debian 8)
-          wget -q https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/aarch64-linux-gnu/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-          wget -q https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-eabi/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.tar.xz
-          
-          tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-          tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi.tar.xz
-          
-          # Экспортируем пути (они будут доступны в этом шаге, но для след. шагов сделаем иначе)
-          echo "TOOLCHAIN_AARCH64=$(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-" >> $GITHUB_ENV
-          echo "TOOLCHAIN_ARM=$(pwd)/gcc-linaro-7.5.0-2019.12-x86_64_arm-eabi/bin/arm-eabi-" >> $GITHUB_ENV
+          # Экспортируем пути
+          echo "TOOLCHAIN_AARCH64=$(pwd)/toolchain-aarch64/bin/aarch64-linux-gnu-" >> $GITHUB_ENV
+          echo "TOOLCHAIN_ARM=$(pwd)/toolchain-arm/bin/arm-eabi-" >> $GITHUB_ENV
 
       - name: Build Kernel
         run: |
-          cd mt6765_kuroneko_x
           # Нейтрализуем BUILD_BUG
           sed -i 's/#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")/#define BUILD_BUG() do { } while (0)/g' include/linux/build_bug.h
           
-          # Настройка окружения с нашими скачанными тулчейнами
+          # Настройка окружения
           export ARCH=arm64
           export CROSS_COMPILE=${{ env.TOOLCHAIN_AARCH64 }}
           export CROSS_COMPILE_ARM32=${{ env.TOOLCHAIN_ARM }}
@@ -60,8 +48,10 @@ jobs:
 
       - name: Package with AnyKernel3
         run: |
-          cd mt6765_kuroneko_x
+          # Копируем ядро
           cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
+          
+          # Запаковываем
           cd AnyKernel3
           zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
@@ -69,18 +59,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: KuroNeko-Extreme-Kernel
-          path: mt6765_kuroneko_x/KuroNeko-Extreme-*.zip
+          path: KuroNeko-Extreme-*.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "KuroNeko-v${{ github.run_id }}"
-          name: "KuroNeko Extreme Kernel Build (Debian 8)"
+          name: "KuroNeko Extreme Kernel Build (Ubuntu + Linaro)"
           body: |
             ### 🥟 Автоматическая сборка ядра KuroNeko Extreme
             * **Особенности:** Вшит KernelSU-Next (Legacy) без gki.
-            * **Окружение:** Debian 8 (Archive) Container.
+            * **Окружение:** Ubuntu Latest Container + Linaro 7.5.
             * **Пакет:** Flashable via AnyKernel3.
-          files: mt6765_kuroneko_x/KuroNeko-Extreme-*.zip
+          files: KuroNeko-Extreme-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
