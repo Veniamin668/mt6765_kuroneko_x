@@ -1,3 +1,8 @@
+name: build kernel
+
+on:
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,20 +17,20 @@ jobs:
 
       - name: Prepare Legacy Environment
         run: |
-          # Указываем правильные адреса архива для Stretch (Debian 9)
+          # Переписываем sources.list под архив Debian 9 (Stretch)
           echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list
           echo "deb http://archive.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list
           
-          # Отключаем проверку срока действия пакетов (они просрочены)
+          # Отключаем проверку срока действия пакетов
           echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/99-ignore-valid-until
           
           apt-get update
-          # Ставим необходимый минимум для сборки ядра
           apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python libssl-dev \
-            wget zip git gcc-aarch64-linux-gnu gcc-arm-none-eabi
-          
-          # Убеждаемся, что DrvGen.py исполняемый
+            wget zip git gcc-aarch64-linux-gnu gcc-arm-none-eabi \
+            libelf-dev
+            
+          # Тот самый критичный фикс для MTK-скриптов
           chmod +x ./tools/dct/DrvGen.py
 
       - name: Build Kernel
@@ -40,11 +45,11 @@ jobs:
           
           make clean && make mrproper
           make akx_extreme_defconfig
-          
+
           # Отключаем FORTIFY_SOURCE
           sed -i 's/CONFIG_FORTIFY_SOURCE=y/CONFIG_FORTIFY_SOURCE=n/g' .config
           
-          # СОБИРАЕМ
+          # Сборка
           make -j$(nproc) \
             KBUILD_CFLAGS='-D__compiletime_error= -w -Wno-error -Wno-attribute-warning -fno-strict-aliasing -fno-stack-protector -std=gnu89' \
             HOSTCFLAGS='-w -Wno-error'
