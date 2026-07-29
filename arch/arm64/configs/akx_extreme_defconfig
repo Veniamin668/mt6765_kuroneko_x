@@ -4484,19 +4484,32 @@ CONFIG_KPROBE_EVENTS=y
 CONFIG_KSU_KPROBE_HOOKS=y
 CONFIG_KSU=y
 
-# HugePages Support
+# Memory Cgroups (Fixes memcg_kmem_ errors)
+CONFIG_MEMCG=y
+CONFIG_MEMCG_KMEM=y
+CONFIG_MEMCG_SWAP=y
+
+# PCI Support (Fixes pci_acs_enabled, pci_for_each_dma_alias, etc)
+CONFIG_PCI=y
+CONFIG_PCI_MSI=y
+CONFIG_PCI_DOMAINS_GENERIC=y
+
+# Frontswap (Fixes __frontswap_* errors)
+CONFIG_FRONTSWAP=y
+
+# Mediatek SMI/IOMMU (Fixes SMI_BUS_SEL_MASTER)
+CONFIG_MTK_IOMMU=y
+CONFIG_MTK_IOMMU_V1=y
+CONFIG_MTK_SMI=y
+
+# HugePages (Fixes pmd_mkdevmap)
 CONFIG_TRANSPARENT_HUGEPAGE=y
 CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS=y
 CONFIG_HUGETLBFS=y
 CONFIG_HUGETLB_PAGE=y
 
-# DAX Support
+# DAX & VDSO
 CONFIG_FS_DAX=y
-
-# VDSO Fixes
 CONFIG_COMPAT=y
 CONFIG_ARMV8_DEPRECATED=y
 CONFIG_SWP_EMULATION=y
-
-# Дополнительные фиксы для MediaTek
-CONFIG_MTK_IOMMU=y
