@@ -15,7 +15,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python3 libssl-dev \
-            wget zip git gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu \
+            wget zip git gcc-arm-none-eabi gcc-aarch64-linux-gnu \
             libelf-dev dwarves
 
       - name: Build Kernel
