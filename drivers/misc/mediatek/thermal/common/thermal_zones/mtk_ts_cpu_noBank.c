@@ -91,6 +91,14 @@
 #if !defined(LVTS_VALID_DATA_TIME_PROFILING)
 #define LVTS_VALID_DATA_TIME_PROFILING	0
 #endif
+
+#ifndef TZCPU_INITCFG_TRIP_9_TEMP
+#define TZCPU_INITCFG_TRIP_9_TEMP TZCPU_INITCFG_TRIP_8_TEMP
+#endif
+
+#ifndef TZCPU_INITCFG_TRIP_9_COOLER
+#define TZCPU_INITCFG_TRIP_9_COOLER TZCPU_INITCFG_TRIP_8_COOLER
+#endif
 /*=============================================================
  *Local variable definition
  *=============================================================
