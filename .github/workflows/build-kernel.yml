@@ -19,12 +19,6 @@ jobs:
             build-essential bc bison flex cpio python3 libssl-dev \
             wget zip git libelf-dev ca-certificates \
             gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi
-
-      - name: Debug Undefined Symbols
-        run: |
-          echo "Searching for the missing symbols..."
-          # Ищем где объявлены или используются эти проблемные куски
-          grep -rnw '.' -e 'swayloop' -e 'lsetloop' -e 'kalMetRemoveProcfs' -e 'SMI_BUS_SEL_MASTER'
       
       - name: Purge stack-protector from Makefiles
         run: |
@@ -54,7 +48,7 @@ jobs:
           
           # 2. Теперь чиним переходы: добавляем 'b' (backward), чтобы ассемблер понял, что это метка
           sed -i 's/b.ge 1/b.ge 1b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
-          sed -i 's/b.ge 2/b.ge 2b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/
+          sed -i 's/b.ge 2/b.ge 2b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
 
           export KBUILD_CFLAGS="$KBUILD_CFLAGS -fno-stack-protector"
           
