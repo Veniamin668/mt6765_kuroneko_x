@@ -13,7 +13,6 @@ jobs:
 
       - name: Setup Build Environment
         run: |
-          # Обновляем список и ставим классические тулчейны из реп Ubuntu
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential bc bison flex cpio python3 libssl-dev \
@@ -25,10 +24,9 @@ jobs:
           find . -type f \( -name "Makefile" -o -name "Kbuild" \) -exec sed -i 's/-fstack-protector[a-zA-Z0-9-]*//g' {} +
           echo "Зачистка завершена. Флаги удалены из всех Makefile/Kbuild."
 
-          - name: Strip THP blocks
-          run: |
-          # Находим и меняем #ifdef CONFIG_TRANSPARENT_HUGEPAGE на #if 0
-          # Это заставит компилятор игнорировать этот код, не удаляя его физически
+      - name: Strip THP blocks
+        run: |
+          # Заглушаем THP, чтобы компилятор не искал функции, которых нет
           find . -type f \( -name "*.c" -o -name "*.h" \) -exec sed -i 's/#ifdef CONFIG_TRANSPARENT_HUGEPAGE/#if 0/g' {} +
           echo "THP-блоки заглушены."
           
@@ -50,10 +48,11 @@ jobs:
           
           make olddefconfig
           
-            sed -i 's/lsetloop:/1:/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
-            sed -i 's/swayloop:/2:/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
+          # Патчи путей для GPU (теперь с полными путями к файлам)
+          sed -i 's/lsetloop:/1:/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
+          sed -i 's/swayloop:/2:/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
           
-          # 2. Теперь чиним переходы: добавляем 'b' (backward), чтобы ассемблер понял, что это метка
+          # Чиним переходы ассемблера
           sed -i 's/b.ge 1/b.ge 1b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
           sed -i 's/b.ge 2/b.ge 2b/g' drivers/misc/mediatek/gpu/gpu_rgx/m1.11ED5425693/services/server/env/linux/osfunc_arm64.c
 
@@ -66,10 +65,7 @@ jobs:
             
       - name: Package with AnyKernel3
         run: |
-          # Копируем ядро
           cp arch/arm64/boot/Image.gz-dtb AnyKernel3/
-          
-          # Запаковываем
           cd AnyKernel3
           zip -r9 ../KuroNeko-Extreme-$(date +%d%m%y).zip *
 
