@@ -24,6 +24,13 @@ jobs:
         run: |
           find . -type f \( -name "Makefile" -o -name "Kbuild" \) -exec sed -i 's/-fstack-protector[a-zA-Z0-9-]*//g' {} +
           echo "Зачистка завершена. Флаги удалены из всех Makefile/Kbuild."
+
+          - name: Strip THP blocks
+          run: |
+          # Находим и меняем #ifdef CONFIG_TRANSPARENT_HUGEPAGE на #if 0
+          # Это заставит компилятор игнорировать этот код, не удаляя его физически
+          find . -type f \( -name "*.c" -o -name "*.h" \) -exec sed -i 's/#ifdef CONFIG_TRANSPARENT_HUGEPAGE/#if 0/g' {} +
+          echo "THP-блоки заглушены."
           
       - name: Build Kernel
         run: |
