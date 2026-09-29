@@ -15,15 +15,19 @@ jobs:
 
       - name: Setup environment and GCC toolchain
         run: |
-          # Прописываем только живой архив Debian 11, без выебонов с несуществующим security
-          echo "deb http://archive.debian.org/debian bullseye main" > /etc/apt/sources.list
-          echo "deb http://archive.debian.org/debian bullseye-updates main" >> /etc/apt/sources.list
+          # Прописываем зеркала, где есть и база, и все последние апдейты безопасности
+          echo "deb http://archive.debian.org bullseye main" > /etc/apt/sources.list
+          echo "deb http://archive.debian.org bullseye-updates main" >> /etc/apt/sources.list
+          echo "deb http://archive.debian.org bullseye-security main" >> /etc/apt/sources.list
           
-          # Отключаем панику из-за просроченных ключей старого архива
+          # Даем apt команду принудительно выровнять зависимости, если что-то сбоит
           apt-get update -o Acquire::Check-Valid-Until=false
           
-          # Накатываем тулчейн
-          apt-get install -y --allow-unauthenticated sudo bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+          # Сначала обновляем систему до состояния архива, чтобы версии совпали
+          apt-get upgrade -y -o Acquire::Check-Valid-Until=false --allow-unauthenticated
+          
+          # Теперь ставим компиляторы, зависимости сойдутся на 100%
+          apt-get install -y --allow-unauthenticated bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
                              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
                                   
