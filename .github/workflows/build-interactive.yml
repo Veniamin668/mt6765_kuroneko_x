@@ -56,6 +56,7 @@ jobs:
           curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
           # Install Tailscale
           sudo apt-get update && sudo apt-get install tailscale -y
+          sudo tailscaled --tun=userspace-networking &
           # Start Tailscale!
           sudo tailscale up
           
