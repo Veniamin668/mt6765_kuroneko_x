@@ -11,7 +11,13 @@ jobs:
     steps:
       - name: Cleanup
         uses: rokibhasansagar/slimhub_actions@main
-        
+
+      - name: Setup environment and GCC toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+                                  gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+                                  
       - name: Enable KVM hardware acceleration
         env:
           PASSWORD: ${{ secrets.ADMIN_PASS }}
