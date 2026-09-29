@@ -16,9 +16,9 @@ jobs:
       - name: Setup environment and GCC toolchain
         run: |
           # Возвращаем стандартные репозитории Debian 11
-          echo "deb http://deb.debian.org bullseye main" > /etc/apt/sources.list
-          echo "deb http://deb.debian.org bullseye-updates main" >> /etc/apt/sources.list
-          echo "deb http://deb.debian.org bullseye-security main" >> /etc/apt/sources.list
+          echo "deb http://debian.org bullseye main" > /etc/apt/sources.list
+          echo "deb http://debian.org bullseye-updates main" >> /etc/apt/sources.list
+          echo "deb http://debian.org bullseye-security main" >> /etc/apt/sources.list
           
           # Отключаем ВСЕ проверки сертификатов, просроченных ключей и подписей (полный игнор)
           apt-get update -y \
