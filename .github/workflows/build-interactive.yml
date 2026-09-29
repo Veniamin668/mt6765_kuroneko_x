@@ -1,0 +1,34 @@
+name: Ubuntu slim Host machine builder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  overkill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Cleanup
+        uses: rokibhasansagar/slimhub_actions@main
+        
+      - name: Enable KVM hardware acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger
+          sudo usermod -aG kvm $USER
+
+      # 1. Скачиваем репозиторий с твоим docker-compose.yml
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Коннектимся к Tailscale по твоему ключу tskey-...
+      - name: Connect to Tailscale Network
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TAIL_KEY }}
+          
+      - name: вечный затык
+        run: |
+          # Железобетонный вечный затык
+          tail -f /dev/null
