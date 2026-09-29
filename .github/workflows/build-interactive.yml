@@ -22,15 +22,25 @@ jobs:
           apt-get install -y bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
                              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
                                   
-      - name: Enable KVM hardware acceleration
+      - name: change password from root
         env:
           PASSWORD: ${{ secrets.ADMIN_PASS }}
         run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | tee /etc/udev/rules.d/99-kvm4all.rules
-          udevadm control --reload-rules && sudo udevadm trigger
-          usermod -aG kvm $USER
+          # Убедимся, что SSH-сервер установлен
+          apt-get update && apt-get install -y openssh-server
+          
+          # Разрешаем вход под root и авторизацию по паролю/ключам
+          sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+          sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+          # Создаем необходимую для работы sshd папку, если её нет
+          mkdir -p /var/run/sshd
+
+          # Запускаем SSH-сервер принудительно
+          service ssh start || /usr/sbin/sshd
+          
           # Задаем пароль для нативного юзера 'runner'
-          echo "runner:$PASSWORD" | chpasswd
+          echo "root:$PASSWORD" | chpasswd
 
       # 1. Скачиваем репозиторий с твоим docker-compose.yml
       - name: Checkout Repository
