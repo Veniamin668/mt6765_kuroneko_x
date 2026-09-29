@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
-                                  gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+                                  gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
                                   
       - name: Enable KVM hardware acceleration
         env:
