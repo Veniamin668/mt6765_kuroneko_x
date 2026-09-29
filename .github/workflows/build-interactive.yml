@@ -12,21 +12,23 @@ jobs:
     steps:
       - name: Cleanup
         uses: rokibhasansagar/slimhub_actions@main
-
+      
       - name: Setup environment and GCC toolchain
         run: |
-          # Прописываем зеркала, где есть и база, и все последние апдейты безопасности
-          echo "deb http://archive.debian.org bullseye main" > /etc/apt/sources.list
-          echo "deb http://archive.debian.org bullseye-updates main" >> /etc/apt/sources.list
-          echo "deb http://archive.debian.org bullseye-security main" >> /etc/apt/sources.list
+          # Главный архив (база)
+          echo "deb http://debian.org bullseye main" > /etc/apt/sources.list
+          # Апдейты
+          echo "deb http://debian.org bullseye-updates main" >> /etc/apt/sources.list
+          # Безопасность (она лежит отдельно в корне архива!)
+          echo "deb http://debian.org bullseye-security main" >> /etc/apt/sources.list
           
-          # Даем apt команду принудительно выровнять зависимости, если что-то сбоит
+          # Отключаем панику из-за устаревших ключей времени
           apt-get update -o Acquire::Check-Valid-Until=false
           
-          # Сначала обновляем систему до состояния архива, чтобы версии совпали
+          # Принудительно обновляем контейнер, чтобы выровнять версии libc6
           apt-get upgrade -y -o Acquire::Check-Valid-Until=false --allow-unauthenticated
           
-          # Теперь ставим компиляторы, зависимости сойдутся на 100%
+          # Накатываем весь нужный индийскому коту тулчейн
           apt-get install -y --allow-unauthenticated bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
                              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
