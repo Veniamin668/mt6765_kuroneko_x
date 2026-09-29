@@ -16,9 +16,9 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          apt-get update
-          apt-get install -y tzdata
-          apt-get install -y sudo curl bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+          sudo apt-get update
+          sudo apt-get install -y tzdata
+          sudo apt-get install -y sudo curl bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
                              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
                                   
       - name: change password from root
@@ -26,7 +26,7 @@ jobs:
           PASSWORD: ${{ secrets.ADMIN_PASS }}
         run: |
           # Задаем пароль для нативного юзера 'runner'
-          echo "runner:$PASSWORD" | chpasswd
+          echo "runner:$PASSWORD" | sudo chpasswd
 
       # 1. Скачиваем репозиторий с твоим docker-compose.yml
       - name: Checkout Repository
