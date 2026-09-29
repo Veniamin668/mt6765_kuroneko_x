@@ -19,7 +19,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y tzdata
-          apt-get install -y bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+          apt-get install -y curl bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
                              gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
                                   
       - name: change password from root
