@@ -6,6 +6,7 @@ on:
 jobs:
   overkill:
     runs-on: ubuntu-22.04-arm
+    container: debian:11
     timeout-minutes: 360
 
     steps:
