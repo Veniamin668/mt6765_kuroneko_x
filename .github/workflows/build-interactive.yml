@@ -5,13 +5,12 @@ on:
 
 jobs:
   overkill:
-    runs-on: ubuntu-22.04-arm
-    container: ubuntu:20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 360
 
     steps:
-      - name: Cleanup
-        uses: rokibhasansagar/slimhub_actions@main
+#      - name: Cleanup
+#        uses: rokibhasansagar/slimhub_actions@main
       
       - name: Setup environment and GCC toolchain
         env:
@@ -26,39 +25,22 @@ jobs:
         env:
           PASSWORD: ${{ secrets.ADMIN_PASS }}
         run: |
-          # Убедимся, что SSH-сервер установлен
-          apt-get update && apt-get install -y openssh-server
-          
-          # Разрешаем вход под root и авторизацию по паролю/ключам
-          sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-          sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-
-          # Создаем необходимую для работы sshd папку, если её нет
-          mkdir -p /var/run/sshd
-
-          # Запускаем SSH-сервер принудительно
-          service ssh start || /usr/sbin/sshd
-          
           # Задаем пароль для нативного юзера 'runner'
-          echo "root:$PASSWORD" | chpasswd
+          echo "runner:$PASSWORD" | chpasswd
 
       # 1. Скачиваем репозиторий с твоим docker-compose.yml
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       # 2. Коннектимся к Tailscale по твоему ключу tskey-...
-      - name: Connect to Tailscale Network
-        run: |
-          # Add Tailscale's GPG key
-          sudo mkdir -p --mode=0755 /usr/share/keyrings
-          curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
-          # Add the tailscale repository
-          curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-          # Install Tailscale
-          sudo apt-get update && sudo apt-get install tailscale -y
-          sudo tailscaled --tun=userspace-networking &
-          # Start Tailscale!
-          sudo tailscale up
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TAIL_KEY }}
+          hostname: runner-builder
+          use-cache: 'true'
+          args: '--advertise-exit-node'
+    
           
       - name: вечный затык
         run: |
