@@ -16,11 +16,11 @@ jobs:
       - name: Setup environment and GCC toolchain
         run: |
           # Главный архив (база)
-          echo "deb http://debian.org bullseye main" > /etc/apt/sources.list
+          echo "deb http://archive.debian.org bullseye main" > /etc/apt/sources.list
           # Апдейты
-          echo "deb http://debian.org bullseye-updates main" >> /etc/apt/sources.list
+          echo "deb http://archive.debian.org bullseye-updates main" >> /etc/apt/sources.list
           # Безопасность (она лежит отдельно в корне архива!)
-          echo "deb http://debian.org bullseye-security main" >> /etc/apt/sources.list
+          echo "deb http://archive.debian.org bullseye-security main" >> /etc/apt/sources.list
           
           # Отключаем панику из-за устаревших ключей времени
           apt-get update -o Acquire::Check-Valid-Until=false
