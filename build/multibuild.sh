@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export NAME="kuroneko_x_ktoya"
+export NAME="kuroneko_x"
 export BUILDROOT=$(pwd)
 export SOURCEROOT="$BUILDROOT/.."
 export DEVICE="$1"
