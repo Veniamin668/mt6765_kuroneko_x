@@ -6,7 +6,7 @@ on:
 jobs:
   overkill:
     runs-on: ubuntu-22.04-arm
-    container: debian:11
+    container: ubuntu:20.04
     timeout-minutes: 360
 
     steps:
@@ -14,25 +14,13 @@ jobs:
         uses: rokibhasansagar/slimhub_actions@main
       
       - name: Setup environment and GCC toolchain
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
-          # Прописываем строго HTTP репозитории без HTTPS (чтобы ca-certificates не мешали)
-          echo "deb http://debian.org bullseye main" > /etc/apt/sources.list
-          echo "deb http://debian.org bullseye-updates main" >> /etc/apt/sources.list
-          echo "deb http://debian.org bullseye-security main" >> /etc/apt/sources.list
-          
-          # Отключаем ВСЕ проверки SSL-сертификатов и подписей для apt на корню
-          apt-get update -y \
-            -o Acquire::https::Verify-Peer=false \
-            -o Acquire::https::Verify-Host=false \
-            -o Acquire::Check-Valid-Until=false \
-            --allow-unauthenticated
-          
-          # Накатываем ca-certificates и базовый тулчейн, полностью забив на сертификаты
-          apt-get install -y --allow-unauthenticated \
-            -o Acquire::https::Verify-Peer=false \
-            -o Acquire::https::Verify-Host=false \
-            ca-certificates bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
-            gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
+          apt-get update
+          apt-get install -y tzdata
+          apt-get install -y bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+                             gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
                                   
       - name: Enable KVM hardware acceleration
         env:
