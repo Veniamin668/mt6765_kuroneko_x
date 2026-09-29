@@ -1,0 +1,19 @@
+#!/bin/bash
+args=()
+
+for arg in "$@"; do
+    if [ "$arg" = "-Wno-" ]; then
+        continue
+    fi
+    if [[ "$arg" == *"-mfloat-abi="* || "$arg" == *"-mfpu="* || "$arg" == *"-m32"* ]]; then
+        continue
+    fi
+    
+    if [ "$arg" = "-O" ] || [ "$arg" = "-O " ] || [ "$arg" = "-O3 " ] || [[ "$arg" == "-O-"* ]]; then
+        args+=("-O2")
+    else
+        args+=("$arg")
+    fi
+done
+
+exec /usr/bin/aarch64-linux-gnu-gcc "${args[@]}"
