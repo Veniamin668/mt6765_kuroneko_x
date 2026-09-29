@@ -15,23 +15,24 @@ jobs:
       
       - name: Setup environment and GCC toolchain
         run: |
-          # Возвращаем стандартные репозитории Debian 11
+          # Прописываем строго HTTP репозитории без HTTPS (чтобы ca-certificates не мешали)
           echo "deb http://debian.org bullseye main" > /etc/apt/sources.list
           echo "deb http://debian.org bullseye-updates main" >> /etc/apt/sources.list
           echo "deb http://debian.org bullseye-security main" >> /etc/apt/sources.list
           
-          # Отключаем ВСЕ проверки сертификатов, просроченных ключей и подписей (полный игнор)
+          # Отключаем ВСЕ проверки SSL-сертификатов и подписей для apt на корню
           apt-get update -y \
+            -o Acquire::https::Verify-Peer=false \
+            -o Acquire::https::Verify-Host=false \
             -o Acquire::Check-Valid-Until=false \
-            -o Acquire::AllowInsecureRepositories=true \
-            -o Acquire::AllowDowngradeToInsecureRepositories=true \
             --allow-unauthenticated
           
-          # Накатываем тулчейн без лишних вопросов
+          # Накатываем ca-certificates и базовый тулчейн, полностью забив на сертификаты
           apt-get install -y --allow-unauthenticated \
-            bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+            -o Acquire::https::Verify-Peer=false \
+            -o Acquire::https::Verify-Host=false \
+            ca-certificates bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
             gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi
-
                                   
       - name: Enable KVM hardware acceleration
         env:
