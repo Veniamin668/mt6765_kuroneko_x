@@ -48,10 +48,16 @@ jobs:
 
       # 2. Коннектимся к Tailscale по твоему ключу tskey-...
       - name: Connect to Tailscale Network
-        uses: tailscale/github-action@v4
-        with:
-          authkey: ${{ secrets.TAIL_KEY }}
-          hostname: kuroneko-builder
+        run: |
+          # Add Tailscale's GPG key
+          sudo mkdir -p --mode=0755 /usr/share/keyrings
+          curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+          # Add the tailscale repository
+          curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+          # Install Tailscale
+          sudo apt-get update && sudo apt-get install tailscale
+          # Start Tailscale!
+          sudo tailscale up
           
       - name: вечный затык
         run: |
