@@ -1,0 +1,52 @@
+name: Build MTK Kernel (GCC)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment and GCC toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential ccache flex libssl-dev libelf-dev python3 git wget \
+                                  gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+      - name: Configure Kernel with gki_unikal_defconfig
+        run: |
+          export ARCH=arm64
+          export SUBARCH=arm64
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          
+          # Применяем твой кастомный дефконфиг
+          make O=out akx_extreme_defconfig
+
+      - name: Build Kernel Image with GCC
+        run: |
+          export ARCH=arm64
+          export SUBARCH=arm64
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          
+          # Запускаем сборку с нашими флагами под GCC
+          make -j$(nproc) O=out Image KCFLAGS="-Wno-error=return-type -Wno-format -Wno-error"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-image-gki-unikal-gcc
+          path: out/arch/arm64/boot/Image
+
+      - name: Create GitHub Release & Upload Binary
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: kernel-gcc-build-${{ github.run_number }}
+          name: "Unisoc GKI GCC Custom Kernel # ${{ github.run_number }}"
+          body: "Сборка через стандартный кросс-компилятор GCC для ARM64."
+          files: out/arch/arm64/boot/Image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
